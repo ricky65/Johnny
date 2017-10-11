@@ -22,11 +22,11 @@ SCRANTIC::PALFile::PALFile(std::string name, std::vector<std::uint8_t> &data) : 
     }
 
     u_read_le(it, palCount);
-    /*if (palCount > 255)
+    if (palCount > 255)
     {
         std::cerr << filename << ": Palette count too large! " << palCount << std::endl;
         palCount = 256;
-    }*/
+    }
 
     std::uint8_t r,g,b;
     SDL_Color color;
