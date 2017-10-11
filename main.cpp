@@ -96,7 +96,7 @@ bool init()
     return true;
 }
 
-int main()
+int main(int argc, char *args[])
 {
     if (!init())
     {
