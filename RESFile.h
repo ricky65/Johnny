@@ -8,12 +8,12 @@ namespace SCRANTIC {
 
 struct resource
 {
-    u_int16_t num;
+    std::uint16_t num;
     std::string filename;
-    u_int32_t blob;
-    u_int32_t offset;
-    u_int32_t size;
-    std::vector<u_int8_t> data;
+    std::uint32_t blob;
+    std::uint32_t offset;
+    std::uint32_t size;
+    std::vector<std::uint8_t> data;
     std::string filetype;
     BaseFile *handle;
 };
@@ -21,13 +21,13 @@ struct resource
 class RESFile : public BaseFile
 {
 protected:
-    std::vector<u_int8_t> header;
-    u_int16_t resCount;
+    std::vector<std::uint8_t> header;
+    std::uint16_t resCount;
 
 public:
     RESFile(std::string name);
     ~RESFile();
-    std::map<u_int8_t, SCRANTIC::resource> resourceMap;
+    std::map<std::uint8_t, SCRANTIC::resource> resourceMap;
     std::string resFilename;
     std::vector<std::string> ADSFiles;
     BaseFile *getResource(std::string name);

@@ -8,16 +8,16 @@ namespace SCRANTIC {
 class BMPFile : public BaseFile
 {
 protected:
-    u_int16_t infBinSize;
-    u_int16_t magic;  //0x8000
-    u_int32_t infSize;
-    u_int16_t imageCount;
-    std::vector<u_int16_t> widthList;
-    std::vector<u_int16_t> heightList;
-    u_int32_t binSize;
-    u_int8_t compressionFlag;
-    u_int32_t uncompressedSize;
-    std::vector<u_int8_t> uncompressedData;
+    std::uint16_t infBinSize;
+    std::uint16_t magic;  //0x8000
+    std::uint32_t infSize;
+    std::uint16_t imageCount;
+    std::vector<std::uint16_t> widthList;
+    std::vector<std::uint16_t> heightList;
+    std::uint32_t binSize;
+    std::uint8_t compressionFlag;
+    std::uint32_t uncompressedSize;
+    std::vector<std::uint8_t> uncompressedData;
     std::vector<SDL_Surface *> imageList;
     std::vector<SDL_Rect> imageRect;
     SDL_Surface *overview;
@@ -25,13 +25,13 @@ protected:
     void createOverview();
 
 public:
-    BMPFile(std::string name, std::vector<u_int8_t> &data);
+    BMPFile(std::string name, std::vector<std::uint8_t> &data);
     ~BMPFile();
-    SDL_Texture *getImage(SDL_Renderer *renderer, u_int16_t num, SDL_Rect &rect);
+    SDL_Texture *getImage(SDL_Renderer *renderer, std::uint16_t num, SDL_Rect &rect);
     size_t getImageCount() { return imageList.size(); }
     SDL_Texture *getOverviewImage(SDL_Renderer *renderer, SDL_Rect &rect);
-    void setPalette(SDL_Color color[], u_int16_t count);
-    SDL_Rect getRect(u_int16_t num);
+    void setPalette(SDL_Color color[], std::uint16_t count);
+    SDL_Rect getRect(std::uint16_t num);
 
 };
 

@@ -115,7 +115,7 @@ int main(int argc, char *args[])
 
 	bool quit = false;
     SDL_Event e;
-    u_int16_t delay;
+    std::uint16_t delay;
     Uint32 ticks, newTicks, frameTicks, waitTicks;
     ticks = SDL_GetTicks();
     bool waiting = false;

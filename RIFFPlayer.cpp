@@ -21,10 +21,10 @@ SCRANTIC::RIFFPlayer::RIFFPlayer(std::string SCRExe)
                          0x39C00, 0x43400, 0x37200, 0x37E00, 0x45A00, 0x3AE00,
                          0x3E600, 0x3F400, 0x41200, 0x42600, 0x42C00, 0x43400 };
 
-    u_int32_t size;
-    u_int8_t byte;
+    std::uint32_t size;
+    std::uint8_t byte;
     SDL_RWops* rwops;
-    std::vector<u_int8_t> rawAudio;
+    std::vector<std::uint8_t> rawAudio;
 
     std::ifstream in;
     in.open(SCRExe, std::ios::binary | std::ios::in);
@@ -37,7 +37,7 @@ SCRANTIC::RIFFPlayer::RIFFPlayer(std::string SCRExe)
     }
 
 
-    for (u_int8_t i = 0; i < MAX_AUDIO; ++i)
+    for (std::uint8_t i = 0; i < MAX_AUDIO; ++i)
     {
         in.seekg(offsets[i]+4, std::ios_base::beg);
         SCRANTIC::BaseFile::u_read_le(&in, size);
@@ -48,7 +48,7 @@ SCRANTIC::RIFFPlayer::RIFFPlayer(std::string SCRExe)
 
         in.seekg(offsets[i], std::ios_base::beg);
 
-        for (u_int32_t j = 0; j < size; ++j)
+        for (std::uint32_t j = 0; j < size; ++j)
         {
             SCRANTIC::BaseFile::u_read_le(&in, byte);
             rawAudio.push_back(byte);
@@ -65,12 +65,12 @@ SCRANTIC::RIFFPlayer::RIFFPlayer(std::string SCRExe)
 
 SCRANTIC::RIFFPlayer::~RIFFPlayer()
 {
-    for (u_int8_t i = 0; i < MAX_AUDIO; ++i)
+    for (std::uint8_t i = 0; i < MAX_AUDIO; ++i)
         Mix_FreeChunk(audioSamples[i]);
 }
 
 
-void SCRANTIC::RIFFPlayer::play(u_int8_t num, bool stopAllOther)
+void SCRANTIC::RIFFPlayer::play(std::uint8_t num, bool stopAllOther)
 {
     if (stopAllOther)
         Mix_HaltChannel(-1);

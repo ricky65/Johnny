@@ -10,32 +10,32 @@ namespace SCRANTIC {
 class ADSFile : public BaseFile
 {
 protected:
-    u_int32_t verSize;
+    std::uint32_t verSize;
     std::string version;
-    u_int32_t resScrTagSize;
-    u_int32_t resSize;
-    u_int16_t resCount;
-    std::map<u_int16_t, std::string> resList;
-    u_int32_t scrSize;
-    u_int8_t compressionFlag;
-    u_int32_t uncompressedSize;
-    std::vector<u_int8_t> rawScript;
-    u_int32_t tagSize;
-    u_int16_t tagCount;
-    std::map<u_int16_t, std::map<std::pair<u_int16_t, u_int16_t>, size_t> > labels;
-    std::map<u_int16_t, std::vector<Command> > script;
+    std::uint32_t resScrTagSize;
+    std::uint32_t resSize;
+    std::uint16_t resCount;
+    std::map<std::uint16_t, std::string> resList;
+    std::uint32_t scrSize;
+    std::uint8_t compressionFlag;
+    std::uint32_t uncompressedSize;
+    std::vector<std::uint8_t> rawScript;
+    std::uint32_t tagSize;
+    std::uint16_t tagCount;
+    std::map<std::uint16_t, std::map<std::pair<std::uint16_t, std::uint16_t>, size_t> > labels;
+    std::map<std::uint16_t, std::vector<Command> > script;
 
 #ifdef DUMP_ADS
     friend class Robinson;
 #endif
 
 public:
-    std::map<u_int16_t, std::string> tagList;
+    std::map<std::uint16_t, std::string> tagList;
 
-    ADSFile(std::string name, std::vector<u_int8_t> &data);
-    std::string getResource(u_int16_t num);
-    std::vector<Command> getFullMovie(u_int16_t num);
-    std::map<std::pair<u_int16_t, u_int16_t>, size_t> getMovieLabels(u_int16_t num);
+    ADSFile(std::string name, std::vector<std::uint8_t> &data);
+    std::string getResource(std::uint16_t num);
+    std::vector<Command> getFullMovie(std::uint16_t num);
+    std::map<std::pair<std::uint16_t, std::uint16_t>, size_t> getMovieLabels(std::uint16_t num);
 };
 
 }

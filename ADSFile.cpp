@@ -1,9 +1,9 @@
 #include "ADSFile.h"
 
-SCRANTIC::ADSFile::ADSFile(std::string name, std::vector<u_int8_t> &data)
+SCRANTIC::ADSFile::ADSFile(std::string name, std::vector<std::uint8_t> &data)
     : BaseFile(name)
 {
-    std::vector<u_int8_t>::iterator it = data.begin();
+    std::vector<std::uint8_t>::iterator it = data.begin();
 
     std::string tmp = read_const_string(it, 4);
     if (tmp != "VER:")
@@ -34,14 +34,14 @@ SCRANTIC::ADSFile::ADSFile(std::string name, std::vector<u_int8_t> &data)
     u_read_le(it, resSize);
     u_read_le(it, resCount);
 
-    u_int16_t id;
+    std::uint16_t id;
     std::string desc;
 
-    for (u_int16_t i = 0; i < resCount; ++i)
+    for (std::uint16_t i = 0; i < resCount; ++i)
     {
         u_read_le(it, id);
         desc = read_string(it);
-        resList.insert(std::pair<u_int16_t, std::string>(id, desc));
+        resList.insert(std::pair<std::uint16_t, std::string>(id, desc));
     }
 
 
@@ -61,14 +61,14 @@ SCRANTIC::ADSFile::ADSFile(std::string name, std::vector<u_int8_t> &data)
 
     switch (compressionFlag)
     {
-    case 0x00: rawScript = std::vector<u_int8_t>(it, (it+scrSize)); break;
+    case 0x00: rawScript = std::vector<std::uint8_t>(it, (it+scrSize)); break;
     case 0x01: rawScript = RLEDecompress(data, i, uncompressedSize); break;
     case 0x02: rawScript = LZWDecompress(data, i, uncompressedSize); break;
     case 0x03: rawScript = RLE2Decompress(data, i, uncompressedSize); break;
     default: std::cerr << filename << ": unhandled compression type: " << (int16_t)compressionFlag << std::endl;
     }
 
-    if (uncompressedSize != (u_int32_t)rawScript.size())
+    if (uncompressedSize != (std::uint32_t)rawScript.size())
         std::cerr << filename << ": decompression error: expected size: " << (size_t)uncompressedSize  << " - got " << rawScript.size() << std::endl;
 
     std::advance(it, scrSize);
@@ -86,11 +86,11 @@ SCRANTIC::ADSFile::ADSFile(std::string name, std::vector<u_int8_t> &data)
     u_read_le(it, tagSize);
     u_read_le(it, tagCount);
 
-    for (u_int16_t i = 0; i < tagCount; ++i)
+    for (std::uint16_t i = 0; i < tagCount; ++i)
     {
         u_read_le(it, id);
         desc = read_string(it);
-        tagList.insert(std::pair<u_int16_t, std::string>(id, desc));
+        tagList.insert(std::pair<std::uint16_t, std::string>(id, desc));
     }
 
     if (!rawScript.size())
@@ -98,10 +98,10 @@ SCRANTIC::ADSFile::ADSFile(std::string name, std::vector<u_int8_t> &data)
 
     it = rawScript.begin();
 
-    u_int16_t word, word2, movie, leftover;
+    std::uint16_t word, word2, movie, leftover;
     Command command;
-    std::map<u_int16_t, std::string>::iterator tagIt;
-    std::map<std::pair<u_int16_t, u_int16_t>, size_t> currentLabels;
+    std::map<std::uint16_t, std::string>::iterator tagIt;
+    std::map<std::pair<std::uint16_t, std::uint16_t>, size_t> currentLabels;
 
     movie = 0;
     leftover = 0;
@@ -259,7 +259,7 @@ SCRANTIC::ADSFile::ADSFile(std::string name, std::vector<u_int8_t> &data)
 
 }
 
-std::string SCRANTIC::ADSFile::getResource(u_int16_t num)
+std::string SCRANTIC::ADSFile::getResource(std::uint16_t num)
 {
     auto it = resList.find(num);
     if (it == resList.end())
@@ -268,20 +268,20 @@ std::string SCRANTIC::ADSFile::getResource(u_int16_t num)
         return it->second;
 }
 
-std::vector<SCRANTIC::Command> SCRANTIC::ADSFile::getFullMovie(u_int16_t num)
+std::vector<SCRANTIC::Command> SCRANTIC::ADSFile::getFullMovie(std::uint16_t num)
 {
-    std::map<u_int16_t, std::vector<Command> >::iterator it = script.find(num);
+    std::map<std::uint16_t, std::vector<Command> >::iterator it = script.find(num);
     if (it == script.end())
         return std::vector<Command>();
     else
         return it->second;
 }
 
-std::map<std::pair<u_int16_t, u_int16_t>, size_t> SCRANTIC::ADSFile::getMovieLabels(u_int16_t num)
+std::map<std::pair<std::uint16_t, std::uint16_t>, size_t> SCRANTIC::ADSFile::getMovieLabels(std::uint16_t num)
 {
-    std::map<u_int16_t, std::map<std::pair<u_int16_t, u_int16_t>, size_t> >::iterator it = labels.find(num);
+    std::map<std::uint16_t, std::map<std::pair<std::uint16_t, std::uint16_t>, size_t> >::iterator it = labels.find(num);
     if (it == labels.end())
-        return std::map<std::pair<u_int16_t, u_int16_t>, size_t>();
+        return std::map<std::pair<std::uint16_t, std::uint16_t>, size_t>();
     else
         return it->second;
 }

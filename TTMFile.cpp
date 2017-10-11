@@ -1,9 +1,9 @@
 #include "TTMFile.h"
 
-SCRANTIC::TTMFile::TTMFile(std::string name, std::vector<u_int8_t> &data)
+SCRANTIC::TTMFile::TTMFile(std::string name, std::vector<std::uint8_t> &data)
     : BaseFile(name)
 {
-    std::vector<u_int8_t>::iterator it = data.begin();
+    std::vector<std::uint8_t>::iterator it = data.begin();
 
     std::string tmp = read_const_string(it, 4);
     if (tmp != "VER:")
@@ -41,14 +41,14 @@ SCRANTIC::TTMFile::TTMFile(std::string name, std::vector<u_int8_t> &data)
 
     switch (compressionFlag)
     {
-    case 0x00: rawScript = std::vector<u_int8_t>(it, (it+ttmSize)); break;
+    case 0x00: rawScript = std::vector<std::uint8_t>(it, (it+ttmSize)); break;
     case 0x01: rawScript = RLEDecompress(data, i, uncompressedSize); break;
     case 0x02: rawScript = LZWDecompress(data, i, uncompressedSize); break;
     case 0x03: rawScript = RLE2Decompress(data, i, uncompressedSize); break;
     default: std::cerr << filename << ": unhandled compression type: " << (int16_t)compressionFlag << std::endl;
     }
 
-    if (uncompressedSize != (u_int32_t)rawScript.size())
+    if (uncompressedSize != (std::uint32_t)rawScript.size())
         std::cerr << filename << ": decompression error: expected size: " << (size_t)uncompressedSize  << " - got " << rawScript.size() << std::endl;
 
     std::advance(it, ttmSize);
@@ -76,14 +76,14 @@ SCRANTIC::TTMFile::TTMFile(std::string name, std::vector<u_int8_t> &data)
     u_read_le(it, tagSize);
     u_read_le(it, tagCount);
 
-    u_int16_t id;
+    std::uint16_t id;
     std::string desc;
 
-    for (u_int16_t i = 0; i < tagCount; ++i)
+    for (std::uint16_t i = 0; i < tagCount; ++i)
     {
         u_read_le(it, id);
         desc = read_string(it);
-        tagList.insert(std::pair<u_int16_t, std::string>(id, desc));
+        tagList.insert(std::pair<std::uint16_t, std::string>(id, desc));
     }
 
     if (!rawScript.size())
@@ -91,11 +91,11 @@ SCRANTIC::TTMFile::TTMFile(std::string name, std::vector<u_int8_t> &data)
 
     it = rawScript.begin();
 
-    u_int16_t opcode;
-    u_int16_t word, scene;
-    u_int8_t length;
+    std::uint16_t opcode;
+    std::uint16_t word, scene;
+    std::uint8_t length;
     Command command;
-    std::map<u_int16_t, std::string>::iterator tagIt;
+    std::map<std::uint16_t, std::string>::iterator tagIt;
 
     scene = 0;
 
@@ -123,7 +123,7 @@ SCRANTIC::TTMFile::TTMFile(std::string name, std::vector<u_int8_t> &data)
         }
         else
         {
-            for (u_int8_t i = 0; i < length; ++i)
+            for (std::uint8_t i = 0; i < length; ++i)
             {
                 u_read_le(it, word);
                 command.data.push_back(word);
@@ -176,18 +176,18 @@ SCRANTIC::TTMFile::TTMFile(std::string name, std::vector<u_int8_t> &data)
 #endif
 }
 
-std::vector<SCRANTIC::Command> SCRANTIC::TTMFile::getFullScene(u_int16_t num)
+std::vector<SCRANTIC::Command> SCRANTIC::TTMFile::getFullScene(std::uint16_t num)
 {
-    std::map<u_int16_t, std::vector<Command> >::iterator it = script.find(num);
+    std::map<std::uint16_t, std::vector<Command> >::iterator it = script.find(num);
     if (it == script.end())
         return std::vector<Command>();
     else
         return it->second;
 }
 
-std::string SCRANTIC::TTMFile::getTag(u_int16_t num)
+std::string SCRANTIC::TTMFile::getTag(std::uint16_t num)
 {
-    std::map<u_int16_t, std::string>::iterator it = tagList.find(num);
+    std::map<std::uint16_t, std::string>::iterator it = tagList.find(num);
     if (it == tagList.end())
         return std::string();
     else
@@ -197,7 +197,7 @@ std::string SCRANTIC::TTMFile::getTag(u_int16_t num)
 
 bool SCRANTIC::TTMFile::hasInit()
 {
-    std::map<u_int16_t, std::vector<Command> >::iterator it;
+    std::map<std::uint16_t, std::vector<Command> >::iterator it;
     it = script.find(0);
 
     if (it == script.end())

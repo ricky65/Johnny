@@ -90,7 +90,7 @@ SCRANTIC::BaseFile::~BaseFile()
 
 }
 
-std::string SCRANTIC::BaseFile::read_string(std::ifstream *in, u_int8_t length)
+std::string SCRANTIC::BaseFile::read_string(std::ifstream *in, std::uint8_t length)
 {
     if (!in->is_open())
         return "";
@@ -117,10 +117,10 @@ std::string SCRANTIC::BaseFile::read_string(std::ifstream *in, u_int8_t length)
     return str;
 }
 
-std::string SCRANTIC::BaseFile::read_string(std::vector<u_int8_t>::iterator &it, u_int8_t length)
+std::string SCRANTIC::BaseFile::read_string(std::vector<std::uint8_t>::iterator &it, std::uint8_t length)
 {
     std::string str = "";
-    u_int8_t i = 0;
+    std::uint8_t i = 0;
 
     char c = (char)*it;
     ++it;
@@ -144,7 +144,7 @@ std::string SCRANTIC::BaseFile::read_string(std::vector<u_int8_t>::iterator &it,
     return str;
 }
 
-std::string SCRANTIC::BaseFile::read_const_string(std::ifstream *in, u_int8_t length)
+std::string SCRANTIC::BaseFile::read_const_string(std::ifstream *in, std::uint8_t length)
 {
     if (!in->is_open())
         return "";
@@ -152,7 +152,7 @@ std::string SCRANTIC::BaseFile::read_const_string(std::ifstream *in, u_int8_t le
     char c;
     std::string str = "";
 
-    for (u_int8_t i = 0; i < length; ++i)
+    for (std::uint8_t i = 0; i < length; ++i)
     {
         in->read(&c, 1);
         str += c;
@@ -161,11 +161,11 @@ std::string SCRANTIC::BaseFile::read_const_string(std::ifstream *in, u_int8_t le
     return str;
 }
 
-std::string SCRANTIC::BaseFile::read_const_string(std::vector<u_int8_t>::iterator &it, u_int8_t length)
+std::string SCRANTIC::BaseFile::read_const_string(std::vector<std::uint8_t>::iterator &it, std::uint8_t length)
 {
     std::string str = "";
 
-    for (u_int8_t i = 0; i < length; ++i)
+    for (std::uint8_t i = 0; i < length; ++i)
     {
         str += (char)*it;
         ++it;
@@ -174,7 +174,7 @@ std::string SCRANTIC::BaseFile::read_const_string(std::vector<u_int8_t>::iterato
     return str;
 }
 
-void SCRANTIC::BaseFile::saveFile(const std::vector<u_int8_t> &data, std::string name, std::string path)
+void SCRANTIC::BaseFile::saveFile(const std::vector<std::uint8_t> &data, std::string name, std::string path)
 {
     std::ofstream out;
 
@@ -196,17 +196,17 @@ void SCRANTIC::BaseFile::saveFile(const std::vector<u_int8_t> &data, std::string
     out.close();
 }
 
-std::vector<u_int8_t> SCRANTIC::BaseFile::RLEDecompress(std::vector<u_int8_t> const &compressedData, size_t offset, u_int32_t size)
+std::vector<std::uint8_t> SCRANTIC::BaseFile::RLEDecompress(std::vector<std::uint8_t> const &compressedData, size_t offset, std::uint32_t size)
 {
-    std::vector<u_int8_t> decompressedData;
-    u_int8_t byte, length;
+    std::vector<std::uint8_t> decompressedData;
+    std::uint8_t byte, length;
 
     while ((offset < compressedData.size()) && ((size == 0) || (decompressedData.size() < size)))
     {
       byte = compressedData[offset++];
       if ((byte & 0x80) == 0x80)
       {
-        length = (u_int8_t)(byte & 0x7F);
+        length = (std::uint8_t)(byte & 0x7F);
         byte = compressedData[offset++];
         for (int i = 0; i < length; ++i)
           decompressedData.push_back(byte);
@@ -222,10 +222,10 @@ std::vector<u_int8_t> SCRANTIC::BaseFile::RLEDecompress(std::vector<u_int8_t> co
 }
 
 
-std::vector<u_int8_t> SCRANTIC::BaseFile::RLE2Decompress(std::vector<u_int8_t> const &compressedData, size_t offset, u_int32_t size)
+std::vector<std::uint8_t> SCRANTIC::BaseFile::RLE2Decompress(std::vector<std::uint8_t> const &compressedData, size_t offset, std::uint32_t size)
 {
-    std::vector<u_int8_t> decompressedData;
-    u_int8_t byte, length;
+    std::vector<std::uint8_t> decompressedData;
+    std::uint8_t byte, length;
 
     while ((offset < compressedData.size()) && ((size == 0) || (decompressedData.size() < size)))
     {
@@ -246,10 +246,10 @@ std::vector<u_int8_t> SCRANTIC::BaseFile::RLE2Decompress(std::vector<u_int8_t> c
     return decompressedData;
 }
 
-u_int16_t SCRANTIC::BaseFile::readBits(std::vector<u_int8_t> const &data, size_t &bytePos, u_int8_t &bitPos, u_int16_t bits)
+std::uint16_t SCRANTIC::BaseFile::readBits(std::vector<std::uint8_t> const &data, size_t &bytePos, std::uint8_t &bitPos, std::uint16_t bits)
 {
-    u_int16_t byte = 0x00;
-    for (u_int16_t i = 0; i < bits; ++i)
+    std::uint16_t byte = 0x00;
+    for (std::uint16_t i = 0; i < bits; ++i)
     {
         if (bytePos >= data.size())
             return byte;
@@ -268,25 +268,25 @@ u_int16_t SCRANTIC::BaseFile::readBits(std::vector<u_int8_t> const &data, size_t
     return byte;
 }
 
-std::vector<u_int8_t> SCRANTIC::BaseFile::LZWDecompress(std::vector<u_int8_t> const &compressedData, size_t offset, u_int32_t size)
+std::vector<std::uint8_t> SCRANTIC::BaseFile::LZWDecompress(std::vector<std::uint8_t> const &compressedData, size_t offset, std::uint32_t size)
 {
-    std::vector<u_int8_t> decompressedData;
-    std::pair<u_int16_t, u_int8_t> dictionary[4096];
-    std::vector<u_int8_t> decodeStack;
+    std::vector<std::uint8_t> decompressedData;
+    std::pair<std::uint16_t, std::uint8_t> dictionary[4096];
+    std::vector<std::uint8_t> decodeStack;
 
-    u_int8_t bitLength = 9;
-    u_int16_t freeDictPos = 257;
+    std::uint8_t bitLength = 9;
+    std::uint16_t freeDictPos = 257;
 
-    u_int16_t oldcode, newcode, code;
+    std::uint16_t oldcode, newcode, code;
     size_t bytePos = offset;
-    u_int8_t bitPos = 0;
-    u_int8_t lastbyte;
-    u_int32_t bitCounter = 0;
+    std::uint8_t bitPos = 0;
+    std::uint8_t lastbyte;
+    std::uint32_t bitCounter = 0;
 
     oldcode = readBits(compressedData, bytePos, bitPos, bitLength);
     lastbyte = oldcode;
 
-    decompressedData.push_back((u_int8_t)oldcode);
+    decompressedData.push_back((std::uint8_t)oldcode);
 
     while ((bytePos < compressedData.size()-1) && ((size == 0) || (decompressedData.size() < size)))
     {
@@ -295,7 +295,7 @@ std::vector<u_int8_t> SCRANTIC::BaseFile::LZWDecompress(std::vector<u_int8_t> co
 
         if (newcode == 256)
         {
-            u_int16_t nskip = ((bitLength*8) - ((bitCounter - 1) % (bitLength*8))) - 1;
+            std::uint16_t nskip = ((bitLength*8) - ((bitCounter - 1) % (bitLength*8))) - 1;
             readBits(compressedData, bytePos, bitPos, nskip);
             bitLength = 9;
             freeDictPos = 256;
@@ -320,8 +320,8 @@ std::vector<u_int8_t> SCRANTIC::BaseFile::LZWDecompress(std::vector<u_int8_t> co
             code = dictionary[code].first;
         }
 
-        decodeStack.push_back((u_int8_t)code);
-        lastbyte = (u_int8_t)code;
+        decodeStack.push_back((std::uint8_t)code);
+        lastbyte = (std::uint8_t)code;
 
         for (size_t i = decodeStack.size(); i > 0; --i)
             decompressedData.push_back(decodeStack[i-1]);

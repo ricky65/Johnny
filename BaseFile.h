@@ -75,17 +75,17 @@ namespace SCRANTIC {
 
 struct Command
 {
-    u_int16_t opcode;
-    std::vector<u_int16_t> data;
+    std::uint16_t opcode;
+    std::vector<std::uint16_t> data;
     std::string name;
 };
 
 class BaseFile
 {
 protected:
-    static std::vector<u_int8_t> RLEDecompress(std::vector<u_int8_t> const &compressedData, size_t offset = 0, u_int32_t size = 0);
-    static std::vector<u_int8_t> RLE2Decompress(std::vector<u_int8_t> const &compressedData, size_t offset = 0, u_int32_t size = 0);
-    static std::vector<u_int8_t> LZWDecompress(std::vector<u_int8_t> const &compressedData, size_t offset = 0, u_int32_t size = 0);
+    static std::vector<std::uint8_t> RLEDecompress(std::vector<std::uint8_t> const &compressedData, size_t offset = 0, std::uint32_t size = 0);
+    static std::vector<std::uint8_t> RLE2Decompress(std::vector<std::uint8_t> const &compressedData, size_t offset = 0, std::uint32_t size = 0);
+    static std::vector<std::uint8_t> LZWDecompress(std::vector<std::uint8_t> const &compressedData, size_t offset = 0, std::uint32_t size = 0);
     SDL_Color defaultPalette[256];
 
 public:
@@ -94,15 +94,15 @@ public:
     std::string filename;
     static std::string commandToString(Command cmd, bool ads = false);
 
-    static std::string read_string(std::ifstream *in, u_int8_t length = 0);
-    static std::string read_string(std::vector<u_int8_t>::iterator &it, u_int8_t length = 0);
-    static std::string read_const_string(std::ifstream *in, u_int8_t length);
-    static std::string read_const_string(std::vector<u_int8_t>::iterator &it, u_int8_t length);
-    static u_int16_t readBits(std::vector<u_int8_t> const &data, size_t &bytePos, u_int8_t &bitPos, u_int16_t bits);
+    static std::string read_string(std::ifstream *in, std::uint8_t length = 0);
+    static std::string read_string(std::vector<std::uint8_t>::iterator &it, std::uint8_t length = 0);
+    static std::string read_const_string(std::ifstream *in, std::uint8_t length);
+    static std::string read_const_string(std::vector<std::uint8_t>::iterator &it, std::uint8_t length);
+    static std::uint16_t readBits(std::vector<std::uint8_t> const &data, size_t &bytePos, std::uint8_t &bitPos, std::uint16_t bits);
     template < typename T > static void u_read_le(std::ifstream *in, T &var);
-    template < typename T > static void u_read_le(std::vector<u_int8_t>::iterator &it, T &var);
+    template < typename T > static void u_read_le(std::vector<std::uint8_t>::iterator &it, T &var);
     template < typename T > static std::string hex_to_string(T t, std::ios_base & (*f)(std::ios_base&));
-    static void saveFile(const std::vector<u_int8_t> &data, std::string name, std::string path = "");
+    static void saveFile(const std::vector<std::uint8_t> &data, std::string name, std::string path = "");
 };
 
 
@@ -114,11 +114,11 @@ void SCRANTIC::BaseFile::u_read_le(std::ifstream *in, T &var)
     if (!in->is_open())
         return;
 
-    u_int8_t size = sizeof(var);
-    u_int8_t byte;
+    const std::uint8_t size = sizeof(var);
+    std::uint8_t byte;
     var = 0;
 
-    for (u_int8_t i = 0; i < size; ++i)
+    for (std::uint8_t i = 0; i < size; ++i)
     {
         in->read((char*)&byte, 1);
         var |= (byte << (i * 8));
@@ -126,12 +126,12 @@ void SCRANTIC::BaseFile::u_read_le(std::ifstream *in, T &var)
 }
 
 template < typename T >
-void SCRANTIC::BaseFile::u_read_le(std::vector<u_int8_t>::iterator &it, T &var)
+void SCRANTIC::BaseFile::u_read_le(std::vector<std::uint8_t>::iterator &it, T &var)
 {
-    u_int8_t size = sizeof(var);
+    const std::uint8_t size = sizeof(var);
     var = 0;
 
-    for (u_int8_t i = 0; i < size; ++i)
+    for (std::uint8_t i = 0; i < size; ++i)
     {
         var |= (*it << (i * 8));
         ++it;

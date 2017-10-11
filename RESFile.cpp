@@ -13,7 +13,7 @@ SCRANTIC::RESFile::RESFile(std::string name) : BaseFile(name)
 
     header.reserve(6);
 
-    u_int8_t byte;
+    std::uint8_t byte;
     for (int i = 0; i < 6; ++i)
     {
         u_read_le(&in, byte);
@@ -34,7 +34,7 @@ SCRANTIC::RESFile::RESFile(std::string name) : BaseFile(name)
 
     u_read_le(&in, resCount);
 
-    u_int32_t blob, offset;
+    std::uint32_t blob, offset;
     resource newRes;
 
     for (int i = 0; i < resCount; ++i)
@@ -53,7 +53,7 @@ SCRANTIC::RESFile::RESFile(std::string name) : BaseFile(name)
         newRes.offset = offset;
         u_read_le(&res, newRes.size);
 
-        for (u_int32_t j = 0; j < newRes.size; ++j)
+        for (std::uint32_t j = 0; j < newRes.size; ++j)
         {
             u_read_le(&res, byte);
             newRes.data.push_back(byte);
@@ -86,7 +86,7 @@ SCRANTIC::RESFile::RESFile(std::string name) : BaseFile(name)
             ADSFiles.push_back(newRes.filename);
         }
 
-        resourceMap.insert(std::pair<u_int8_t, SCRANTIC::resource>(i, newRes));
+        resourceMap.insert(std::pair<std::uint8_t, SCRANTIC::resource>(i, newRes));
 
         //saveFile(newRes.data, newRes.filename, "res/");
     }

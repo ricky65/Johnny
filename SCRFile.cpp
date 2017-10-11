@@ -1,9 +1,9 @@
 #include "SCRFile.h"
 
-SCRANTIC::SCRFile::SCRFile(std::string name, std::vector<u_int8_t> &data)
+SCRANTIC::SCRFile::SCRFile(std::string name, std::vector<std::uint8_t> &data)
     : BaseFile(name), image(NULL), texture(NULL)
 {
-    std::vector<u_int8_t>::iterator it = data.begin();
+    std::vector<std::uint8_t>::iterator it = data.begin();
 
     std::string tmp = read_const_string(it, 4);
     if (tmp != "SCR:")
@@ -42,7 +42,7 @@ SCRANTIC::SCRFile::SCRFile(std::string name, std::vector<u_int8_t> &data)
 
     switch (compressionFlag)
     {
-    case 0x00: uncompressedData = std::vector<u_int8_t>(it, (it+binSize)); break;
+    case 0x00: uncompressedData = std::vector<std::uint8_t>(it, (it+binSize)); break;
     case 0x01: uncompressedData = RLEDecompress(data, i, uncompressedSize); break;
     case 0x02: uncompressedData = LZWDecompress(data, i, uncompressedSize); break;
     case 0x03: uncompressedData = RLE2Decompress(data, i, uncompressedSize); break;
@@ -50,7 +50,7 @@ SCRANTIC::SCRFile::SCRFile(std::string name, std::vector<u_int8_t> &data)
     }
 
 
-    if (uncompressedSize != (u_int32_t)uncompressedData.size())
+    if (uncompressedSize != (std::uint32_t)uncompressedData.size())
         std::cerr << filename << ": decompression error: expected size: " << (size_t)uncompressedSize  << " - got " << uncompressedData.size() << std::endl;
 
     if (!uncompressedData.size())
@@ -63,7 +63,7 @@ SCRANTIC::SCRFile::SCRFile(std::string name, std::vector<u_int8_t> &data)
 
     size_t z = 0;
     bool high = false;
-    u_int8_t idx;
+    std::uint8_t idx;
     unsigned char *p = (unsigned char*)image->pixels;
 
     for (int y  = 0; y < image->h; ++y)
@@ -90,7 +90,7 @@ SCRANTIC::SCRFile::~SCRFile()
     SDL_FreeSurface(image);
 }
 
-void SCRANTIC::SCRFile::setPalette(SDL_Color color[], u_int16_t count)
+void SCRANTIC::SCRFile::setPalette(SDL_Color color[], std::uint16_t count)
 {
     if (image == NULL)
         return;

@@ -6,7 +6,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #endif
 
-SCRANTIC::TTMPlayer::TTMPlayer(std::string ttmName, u_int16_t resNum, u_int16_t scene, int16_t repeatCount, RESFile *resFile, BMPFile **BMPs, SDL_Color *pal, SDL_Renderer *rendererContext)
+SCRANTIC::TTMPlayer::TTMPlayer(std::string ttmName, std::uint16_t resNum, std::uint16_t scene, int16_t repeatCount, RESFile *resFile, BMPFile **BMPs, SDL_Color *pal, SDL_Renderer *rendererContext)
     : resNo(resNum), sceneNo(scene), originalScene(scene), repeat(repeatCount), delay(0), remainingDelay(0), imgSlot(0), audioSample(-1), jumpToScript(-1),
       renderer(rendererContext), clipRegion(false), alreadySaved(true), saveNewImage(false), palette(pal), maxTicks(0), selfDestruct(false), selfDestructActive(false),
       saveImage(false), isDone(false), toBeKilled(false), images(BMPs), res(resFile), ttm(NULL),
@@ -48,12 +48,12 @@ SCRANTIC::TTMPlayer::~TTMPlayer()
     SDL_DestroyTexture(fg);
 }
 
-u_int16_t SCRANTIC::TTMPlayer::getDelay()
+std::uint16_t SCRANTIC::TTMPlayer::getDelay()
 {
     return delay;
 }
 
-u_int16_t SCRANTIC::TTMPlayer::getRemainigDelay(u_int32_t ticks)
+std::uint16_t SCRANTIC::TTMPlayer::getRemainigDelay(std::uint32_t ticks)
 {
     if (selfDestructActive)
     {
@@ -121,7 +121,7 @@ void SCRANTIC::TTMPlayer::advanceScript()
     Command cmd;
     SceneItem item;
 
-    u_int16_t flag = 0;
+    std::uint16_t flag = 0;
 
     bool stop = false;
     audioSample = -1;
@@ -397,7 +397,7 @@ void SCRANTIC::TTMPlayer::renderForeground()
     SDL_SetRenderTarget(renderer, fg);
 }
 
-u_int8_t SCRANTIC::TTMPlayer::needsSave()
+std::uint8_t SCRANTIC::TTMPlayer::needsSave()
 {
     if (!saveImage)
         return 0;

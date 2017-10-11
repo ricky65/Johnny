@@ -9,14 +9,14 @@ namespace SCRANTIC {
 class PALFile : public BaseFile
 {
 protected:
-    u_int16_t vgaSize;
-    u_int16_t magic;  // 0x8000
-    u_int32_t palCount;
-    //std::vector< std::tuple< u_int8_t, u_int8_t, u_int8_t > > palette;
+    std::uint16_t vgaSize;
+    std::uint16_t magic;  // 0x8000
+    std::uint32_t palCount;
+    //std::vector< std::tuple< std::uint8_t, std::uint8_t, std::uint8_t > > palette;
     std::vector<SDL_Color> palette;
 public:
-    PALFile(std::string name, std::vector<u_int8_t> &data);
-    //std::vector< std::tuple< u_int8_t, u_int8_t, u_int8_t > > getPalette() { return palette; }
+    PALFile(std::string name, std::vector<std::uint8_t> &data);
+    //std::vector< std::tuple< std::uint8_t, std::uint8_t, std::uint8_t > > getPalette() { return palette; }
     SDL_Color *getPalette() { return &palette[0]; }
 };
 

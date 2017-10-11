@@ -21,7 +21,7 @@ protected:
 public:
     RIFFPlayer(std::string SCRExe);
     ~RIFFPlayer();
-    void play(u_int8_t num, bool stopAllOther = true);
+    void play(std::uint8_t num, bool stopAllOther = true);
 };
 
 }

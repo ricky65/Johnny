@@ -22,7 +22,7 @@ class Robinson
 protected:
     //menu stuff
     std::map<std::string, SDL_Texture *> menuScreen;
-    std::map<std::string, std::map<u_int16_t, SDL_Rect> > menuPos;
+    std::map<std::string, std::map<std::uint16_t, SDL_Rect> > menuPos;
     std::string currentMenuScreen;
     size_t currentMenuPos;
     bool renderMenu;
@@ -31,7 +31,7 @@ protected:
     ADSFile *ads;
     std::vector<Command> script;
     size_t scriptPos;
-    std::map<std::pair<u_int16_t, u_int16_t>, size_t> labels;
+    std::map<std::pair<std::uint16_t, std::uint16_t>, size_t> labels;
 
     RIFFPlayer *audioPlayer;
 
@@ -63,35 +63,35 @@ protected:
     BMPFile *holidayBMP;
     BMPFile *raftBMP;
 
-    std::list<std::pair<u_int16_t, u_int16_t> > lastTTMs;
+    std::list<std::pair<std::uint16_t, std::uint16_t> > lastTTMs;
 
     // lots of rects...
     SDL_Rect fullRect;
     SDL_Rect oceanRect;
     SDL_Rect screenRect;
 
-    //u_int16_t currentMovie;
+    //std::uint16_t currentMovie;
     std::string name;
 
     std::list<TTMPlayer *> ttmScenes;
 
     BMPFile *images[MAX_IMAGES];
 
-    u_int16_t delay;
-    u_int16_t currentMovie;
-    u_int16_t queuedMovie;
+    std::uint16_t delay;
+    std::uint16_t currentMovie;
+    std::uint16_t queuedMovie;
     size_t queuedPos;
 
-    u_int32_t delayTicks;
+    std::uint32_t delayTicks;
 
     void resetPlayer();
 
     void menuRenderer();
-    void renderBackgroundAtPos(u_int16_t num, int32_t x, int32_t y, bool raft = false, bool holiday = false);
+    void renderBackgroundAtPos(std::uint16_t num, int32_t x, int32_t y, bool raft = false, bool holiday = false);
     void animateBackground();
     void displaySplash();
 
-    bool setPosToLabel(std::pair<u_int16_t, u_int16_t> lastPlayed);
+    bool setPosToLabel(std::pair<std::uint16_t, std::uint16_t> lastPlayed);
     void addTTM(Command cmd);
     void runTTMs();
 
@@ -104,17 +104,17 @@ public:
     void initMenu(TTF_Font *font);
     void initRenderer(SDL_Renderer *rendererSDL);
 
-    void advanceADSScript(std::pair<u_int16_t, u_int16_t> lastPlayed = std::make_pair((u_int16_t)0,(u_int16_t)0));
+    void advanceADSScript(std::pair<std::uint16_t, std::uint16_t> lastPlayed = std::make_pair((std::uint16_t)0,(std::uint16_t)0));
     void advanceScripts();
     void render();
 
     bool isMenuOpen() { return renderMenu; }
     bool isMovieRunning() { return movieRunning; }
 
-    bool loadMovie(std::string adsName, u_int16_t num);
+    bool loadMovie(std::string adsName, std::uint16_t num);
     void startMovie();
 
-    u_int32_t getCurrentDelay() { return delay; }
+    std::uint32_t getCurrentDelay() { return delay; }
     void displayMenu(bool show) { renderMenu = show; }
 };
 

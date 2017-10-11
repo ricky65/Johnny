@@ -1,9 +1,9 @@
 #include "BMPFile.h"
 
-SCRANTIC::BMPFile::BMPFile(std::string name, std::vector<u_int8_t> &data)
+SCRANTIC::BMPFile::BMPFile(std::string name, std::vector<std::uint8_t> &data)
     : BaseFile(name), overview(NULL), ovTexture(NULL)
 {
-    std::vector<u_int8_t>::iterator it = data.begin();
+    std::vector<std::uint8_t>::iterator it = data.begin();
 
     std::string tmp = read_const_string(it, 4);
     if (tmp != "BMP:")
@@ -25,7 +25,7 @@ SCRANTIC::BMPFile::BMPFile(std::string name, std::vector<u_int8_t> &data)
     u_read_le(it, infSize);
     u_read_le(it, imageCount);
 
-    u_int16_t word;
+    std::uint16_t word;
     for (int i = 0; i < imageCount; ++i)
     {
         u_read_le(it, word);
@@ -53,14 +53,14 @@ SCRANTIC::BMPFile::BMPFile(std::string name, std::vector<u_int8_t> &data)
 
     switch (compressionFlag)
     {
-    case 0x00: uncompressedData = std::vector<u_int8_t>(it, (it+binSize)); break;
+    case 0x00: uncompressedData = std::vector<std::uint8_t>(it, (it+binSize)); break;
     case 0x01: uncompressedData = RLEDecompress(data, i, uncompressedSize); break;
     case 0x02: uncompressedData = LZWDecompress(data, i, uncompressedSize); break;
     case 0x03: uncompressedData = RLE2Decompress(data, i, uncompressedSize); break;
     default: std::cerr << filename << ": unhandled compression type: " << (int16_t)compressionFlag << std::endl;
     }
 
-    if (uncompressedSize != (u_int32_t)uncompressedData.size())
+    if (uncompressedSize != (std::uint32_t)uncompressedData.size())
         std::cerr << filename << ": decompression error: expected size: " << (size_t)uncompressedSize  << " - got " << uncompressedData.size() << " type " << (int16_t)compressionFlag << std::endl;
 
     if (!uncompressedData.size())
@@ -70,12 +70,12 @@ SCRANTIC::BMPFile::BMPFile(std::string name, std::vector<u_int8_t> &data)
 
     size_t z = 0;
     bool high = false;
-    u_int8_t idx;
+    std::uint8_t idx;
     SDL_Surface *image;
 
     unsigned char *p;
 
-    for (u_int16_t i = 0; i < imageCount; ++i)
+    for (std::uint16_t i = 0; i < imageCount; ++i)
     {
         image = SDL_CreateRGBSurface(0, widthList.at(i), heightList.at(i), 8, 0, 0, 0, 0);
         SDL_SetPaletteColors(image->format->palette, defaultPalette, 0, 256);
@@ -112,7 +112,7 @@ SCRANTIC::BMPFile::~BMPFile()
     SDL_DestroyTexture(ovTexture);
 }
 
-SDL_Texture *SCRANTIC::BMPFile::getImage(SDL_Renderer *renderer, u_int16_t num, SDL_Rect &rect)
+SDL_Texture *SCRANTIC::BMPFile::getImage(SDL_Renderer *renderer, std::uint16_t num, SDL_Rect &rect)
 {
     if ((num >= imageList.size()) || (imageList.at(num) == NULL))
         return NULL;
@@ -135,7 +135,7 @@ SDL_Texture *SCRANTIC::BMPFile::getImage(SDL_Renderer *renderer, u_int16_t num, 
     return ovTexture;
 }
 
-SDL_Rect SCRANTIC::BMPFile::getRect(u_int16_t num)
+SDL_Rect SCRANTIC::BMPFile::getRect(std::uint16_t num)
 {
     if ((num >= imageList.size()) || (imageList.at(num) == NULL))
         return SDL_Rect();
@@ -145,11 +145,11 @@ SDL_Rect SCRANTIC::BMPFile::getRect(u_int16_t num)
 
 void SCRANTIC::BMPFile::createOverview()
 {
-    u_int16_t currentWidth = 0;
-    u_int16_t lineHeight = 0;
-    u_int16_t maxWidth = 640;
-    u_int16_t imgWidth, imgHeight;
-    u_int16_t currentY = 0;
+    std::uint16_t currentWidth = 0;
+    std::uint16_t lineHeight = 0;
+    std::uint16_t maxWidth = 640;
+    std::uint16_t imgWidth, imgHeight;
+    std::uint16_t currentY = 0;
 
     for (size_t i = 0; i < imageList.size(); ++i)
     {
@@ -246,7 +246,7 @@ SDL_Texture *SCRANTIC::BMPFile::getOverviewImage(SDL_Renderer *renderer, SDL_Rec
     return ovTexture;
 }
 
-void SCRANTIC::BMPFile::setPalette(SDL_Color color[], u_int16_t count)
+void SCRANTIC::BMPFile::setPalette(SDL_Color color[], std::uint16_t count)
 {
     if (overview == NULL)
         return;
