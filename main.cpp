@@ -113,7 +113,7 @@ int main(int argc, char *args[])
     crusoe->loadMovie("VISITOR.ADS", 3);
     crusoe->startMovie();
 
-    bool quit;
+	bool quit = false;
     SDL_Event e;
     u_int16_t delay;
     Uint32 ticks, newTicks, frameTicks, waitTicks;
