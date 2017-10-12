@@ -350,7 +350,7 @@ std::string SCRANTIC::BaseFile::commandToString(Command cmd, bool ads)
 {
     std::string ret = " ";
     std::string hex;
-    size_t len = 4;
+    const size_t len = 4;
     for (size_t i = 0; i < cmd.data.size(); ++i)
     {
         hex = hex_to_string(cmd.data.at(i), std::hex);

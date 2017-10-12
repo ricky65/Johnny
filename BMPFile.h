@@ -30,7 +30,7 @@ public:
     SDL_Texture *getImage(SDL_Renderer *renderer, std::uint16_t num, SDL_Rect &rect);
     size_t getImageCount() { return imageList.size(); }
     SDL_Texture *getOverviewImage(SDL_Renderer *renderer, SDL_Rect &rect);
-    void setPalette(SDL_Color color[], std::uint16_t count);
+    void setPalette(const SDL_Color *color, std::uint16_t count);
     SDL_Rect getRect(std::uint16_t num);
 
 };

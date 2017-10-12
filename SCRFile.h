@@ -25,7 +25,7 @@ public:
     SCRFile(std::string name, std::vector<std::uint8_t> &data);
     ~SCRFile();
     SDL_Texture *getImage(SDL_Renderer *renderer, SDL_Rect &rect);
-    void setPalette(SDL_Color color[], std::uint16_t count);
+    void setPalette(const SDL_Color *color, std::uint16_t count);
 };
 
 }

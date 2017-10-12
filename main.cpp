@@ -14,6 +14,10 @@
 #include <SDL2/SDL_ttf.h>
 #endif
 
+#ifdef _MSC_VER
+#include <Windows.h>
+#endif
+
 #define ticksPerFrame 1000/30
 
 using namespace std;
@@ -98,6 +102,15 @@ bool init()
 
 int main(int argc, char *args[])
 {
+	//Create debug console for MSVC
+#ifdef _MSC_VER
+	AllocConsole();
+	// Redirect the standard input, output, and error handles to the console
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+#endif 	
+
     if (!init())
     {
         std::cerr << "Error in init()!" << std::endl;
@@ -105,13 +118,14 @@ int main(int argc, char *args[])
     }
 
     cout << "Hello Johnny's World!" << endl;
-    SCRANTIC::Robinson *crusoe = new SCRANTIC::Robinson("RESOURCE.MAP", "SCRANTIC.SCR");
 
-    crusoe->initRenderer(g_Renderer);
-    crusoe->initMenu(g_Font);
+	SCRANTIC::Robinson crusoe = SCRANTIC::Robinson("RESOURCE.MAP", "SCRANTIC.SCR");
 
-    crusoe->loadMovie("VISITOR.ADS", 3);
-    crusoe->startMovie();
+    crusoe.initRenderer(g_Renderer);
+    crusoe.initMenu(g_Font);
+
+    crusoe.loadMovie("VISITOR.ADS", 3);
+    crusoe.startMovie();
 
 	bool quit = false;
     SDL_Event e;
@@ -128,10 +142,10 @@ int main(int argc, char *args[])
 
         if (!waiting)
         {
-            crusoe->advanceScripts();
-            if (!crusoe->isMovieRunning())
-                crusoe->displayMenu(true);
-            delay = crusoe->getCurrentDelay();
+            crusoe.advanceScripts();
+            if (!crusoe.isMovieRunning())
+                crusoe.displayMenu(true);
+            delay = crusoe.getCurrentDelay();
             if (delay == 0)
                 delay = 100;
         }
@@ -152,7 +166,7 @@ int main(int argc, char *args[])
         ticks = newTicks;
         waiting = (delay > waitTicks);
         SDL_Delay(waitTicks);
-        crusoe->render();
+        crusoe.render();
         SDL_RenderPresent(g_Renderer);
 
         while(SDL_PollEvent(&e) != 0)
@@ -164,22 +178,22 @@ int main(int argc, char *args[])
                 if (e.key.keysym.sym == SDLK_SPACE && !e.key.repeat)
                     pause = !pause;
                 else if (e.key.keysym.sym == SDLK_ESCAPE && !e.key.repeat)
-                    if (crusoe->isMenuOpen())
+                    if (crusoe.isMenuOpen())
                     {
-                        crusoe->displayMenu(false);
+                        crusoe.displayMenu(false);
                         pause = false;
                     }
                     else
                         quit = true;
-                else if (!e.key.repeat && crusoe->isMenuOpen())
+                else if (!e.key.repeat && crusoe.isMenuOpen())
                 {
-                    if (crusoe->navigateMenu(e.key.keysym.sym))
+                    if (crusoe.navigateMenu(e.key.keysym.sym))
                         pause = false;
                 }
                 else if (e.key.keysym.sym == SDLK_RETURN && !e.key.repeat)
                 {
                     pause = true;
-                    crusoe->displayMenu(true);
+                    crusoe.displayMenu(true);
                 }
                 break;
             case SDL_QUIT:
@@ -189,7 +203,6 @@ int main(int argc, char *args[])
         }
     }
 
-    delete crusoe;
     cleanup();
 
     return 0;

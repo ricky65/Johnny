@@ -564,7 +564,7 @@ void SCRANTIC::Robinson::render()
             audioPlayer->play(audio);
 
         scrName = (*it)->getSCRName();
-        if (scrName != "")
+        if (!scrName.empty())
         {
             //std::string scrName = (*it)->getSCRName();
             scrTexture = static_cast<SCRFile *>(res->getResource(scrName))->getImage(renderer, screenRect);
@@ -623,7 +623,7 @@ void SCRANTIC::Robinson::addTTM(Command cmd)
         {
             ttm->advanceScript();
             scrName = ttm->getSCRName();
-            if (scrName != "")
+            if (!scrName.empty())
             {
                 scrTexture = static_cast<SCRFile *>(res->getResource(scrName))->getImage(renderer, screenRect);
                 if (scrName == "ISLETEMP.SCR")

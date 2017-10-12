@@ -17,7 +17,7 @@ protected:
 public:
     PALFile(std::string name, std::vector<std::uint8_t> &data);
     //std::vector< std::tuple< std::uint8_t, std::uint8_t, std::uint8_t > > getPalette() { return palette; }
-    SDL_Color *getPalette() { return &palette[0]; }
+    SDL_Color *getPalette() { return palette.data(); }
 };
 
 }

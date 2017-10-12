@@ -246,7 +246,7 @@ SDL_Texture *SCRANTIC::BMPFile::getOverviewImage(SDL_Renderer *renderer, SDL_Rec
     return ovTexture;
 }
 
-void SCRANTIC::BMPFile::setPalette(SDL_Color color[], std::uint16_t count)
+void SCRANTIC::BMPFile::setPalette(const SDL_Color *color, std::uint16_t count)
 {
     if (overview == NULL)
         return;

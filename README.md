@@ -24,3 +24,6 @@ The project depends on SDL2/Mixer/TTF/GFX. The library for the SDL2_gfx is added
 Compile using:
 
 cmake . && make
+
+## Update 12th Oct 2017 – Riccardo Marcangelo
+* Added Visual Studio 2017 support

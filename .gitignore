@@ -6,3 +6,17 @@ cmake_install.cmake
 install_manifest.txt
 CMakeLists.txt.user
 
+#Visual Studio
+Debug/Johnny Castaway.exp
+Debug/Johnny Castaway.lib
+Release/Johnny Castaway.exp
+Release/Johnny Castaway.lib
+*.db
+*.opendb
+*.ipch
+*.xml
+*.lastcodeanalysissucceeded
+*.tlog
+*.idb
+*.lastbuildstate
+

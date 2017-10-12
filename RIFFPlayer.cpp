@@ -56,7 +56,7 @@ SCRANTIC::RIFFPlayer::RIFFPlayer(std::string SCRExe)
 
         //SCRANTIC::BaseFile::saveFile(rawAudio[i], "RIFF"+std::to_string(i)+".wav");
 
-        rwops = SDL_RWFromMem((unsigned char*)&rawAudio.front(), rawAudio.size());
+        rwops = SDL_RWFromMem(rawAudio.data(), rawAudio.size());
         audioSamples[i] = Mix_LoadWAV_RW(rwops, 1);
     }
 

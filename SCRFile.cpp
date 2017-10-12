@@ -90,7 +90,7 @@ SCRANTIC::SCRFile::~SCRFile()
     SDL_FreeSurface(image);
 }
 
-void SCRANTIC::SCRFile::setPalette(SDL_Color color[], std::uint16_t count)
+void SCRANTIC::SCRFile::setPalette(const SDL_Color *color, std::uint16_t count)
 {
     if (image == NULL)
         return;
