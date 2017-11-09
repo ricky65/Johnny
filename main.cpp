@@ -119,7 +119,7 @@ int main(int argc, char *args[])
 
     cout << "Hello Johnny's World!" << endl;
 
-	SCRANTIC::Robinson crusoe = SCRANTIC::Robinson("RESOURCE.MAP", "SCRANTIC.SCR");
+	SCRANTIC::Robinson crusoe { "RESOURCE.MAP", "SCRANTIC.SCR" };
 
     crusoe.initRenderer(g_Renderer);
     crusoe.initMenu(g_Font);
