@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <memory>
 
 #ifdef WIN32
 #include <SDL.h>

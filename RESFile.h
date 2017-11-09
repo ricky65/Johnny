@@ -15,7 +15,7 @@ struct resource
     std::uint32_t size;
     std::vector<std::uint8_t> data;
     std::string filetype;
-    BaseFile *handle;
+	std::shared_ptr<BaseFile> handle;
 };
 
 class RESFile : public BaseFile
@@ -26,11 +26,19 @@ protected:
 
 public:
     RESFile(std::string name);
-    ~RESFile();
+    ~RESFile() = default;
     std::map<std::uint8_t, SCRANTIC::resource> resourceMap;
     std::string resFilename;
     std::vector<std::string> ADSFiles;
-    BaseFile *getResource(std::string name);
+
+    std::shared_ptr<BaseFile> getResource(std::string name)
+	{
+		for (auto i = std::begin(resourceMap); i != std::end(resourceMap); ++i)
+			if (i->second.filename == name)
+				return i->second.handle;
+
+		return nullptr;
+	}
 };
 
 }

@@ -98,8 +98,7 @@ SCRANTIC::ADSFile::ADSFile(std::string name, std::vector<std::uint8_t> &data)
 
     it = rawScript.begin();
 
-    std::uint16_t word, word2, movie, leftover;
-    Command command;
+    std::uint16_t word, word2, movie, leftover;   
     std::map<std::uint16_t, std::string>::iterator tagIt;
     std::map<std::pair<std::uint16_t, std::uint16_t>, size_t> currentLabels;
 
@@ -117,9 +116,9 @@ SCRANTIC::ADSFile::ADSFile(std::string name, std::vector<std::uint8_t> &data)
             word = leftover;
             leftover = 0;
         }
+
+		Command command;
         command.opcode = word;
-        command.data.clear();
-        command.name.clear();
 
         switch (command.opcode)
         {

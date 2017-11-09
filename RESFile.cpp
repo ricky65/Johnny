@@ -32,15 +32,13 @@ SCRANTIC::RESFile::RESFile(std::string name) : BaseFile(name)
     if (!res.is_open())
         std::cerr << "RESFile: Could not open resource file: " << resFilename << std::endl;
 
-    u_read_le(&in, resCount);
-
-    std::uint32_t blob, offset;
-    resource newRes;
+    u_read_le(&in, resCount);    
 
     for (int i = 0; i < resCount; ++i)
     {
-        newRes.data.clear();
-        newRes.handle = NULL;
+		std::uint32_t blob, offset;    
+		SCRANTIC::resource newRes;
+
         u_read_le(&in, blob);
         u_read_le(&in, offset);
 
@@ -61,28 +59,23 @@ SCRANTIC::RESFile::RESFile(std::string name) : BaseFile(name)
 
         if (newRes.filetype == "PAL")
         {
-            PALFile *pal = new PALFile(newRes.filename, newRes.data);
-            newRes.handle = static_cast<BaseFile *>(pal);
+			newRes.handle = std::make_shared<PALFile>(newRes.filename, newRes.data);
         }
         else if (newRes.filetype == "SCR")
         {
-            SCRFile *scr = new SCRFile(newRes.filename, newRes.data);
-            newRes.handle = static_cast<BaseFile *>(scr);
+			newRes.handle = std::make_shared<SCRFile>(newRes.filename, newRes.data);
         }
         else if (newRes.filetype == "BMP")
         {
-            BMPFile *bmp = new BMPFile(newRes.filename, newRes.data);
-            newRes.handle = static_cast<BaseFile *>(bmp);
+			newRes.handle = std::make_shared<BMPFile>(newRes.filename, newRes.data);
         }
         else if (newRes.filetype == "TTM")
         {
-            TTMFile *ttm = new TTMFile(newRes.filename, newRes.data);
-            newRes.handle = static_cast<BaseFile *>(ttm);
+			newRes.handle = std::make_shared<TTMFile>(newRes.filename, newRes.data);
         }
         else if (newRes.filetype == "ADS")
         {
-            ADSFile *ads = new ADSFile(newRes.filename, newRes.data);
-            newRes.handle = static_cast<BaseFile *>(ads);
+			newRes.handle = std::make_shared<ADSFile>(newRes.filename, newRes.data);
             ADSFiles.push_back(newRes.filename);
         }
 
@@ -95,20 +88,4 @@ SCRANTIC::RESFile::RESFile(std::string name) : BaseFile(name)
     in.close();
 }
 
-SCRANTIC::RESFile::~RESFile()
-{
-    for(auto i = std::begin(resourceMap); i != std::end(resourceMap); ++i)
-    {
-        if (i->second.handle != NULL)
-            delete i->second.handle;
-    }
-}
 
-SCRANTIC::BaseFile *SCRANTIC::RESFile::getResource(std::string name)
-{
-    for(auto i = std::begin(resourceMap); i != std::end(resourceMap); ++i)
-        if (i->second.filename == name)
-            return i->second.handle;
-
-    return NULL;
-}

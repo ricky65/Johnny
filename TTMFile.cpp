@@ -93,8 +93,7 @@ SCRANTIC::TTMFile::TTMFile(std::string name, std::vector<std::uint8_t> &data)
 
     std::uint16_t opcode;
     std::uint16_t word, scene;
-    std::uint8_t length;
-    Command command;
+    std::uint8_t length;   
     std::map<std::uint16_t, std::string>::iterator tagIt;
 
     scene = 0;
@@ -103,9 +102,8 @@ SCRANTIC::TTMFile::TTMFile(std::string name, std::vector<std::uint8_t> &data)
     {
         u_read_le(it, opcode);
         length = (opcode & 0x000F);
+		Command command;
         command.opcode = (opcode & 0xFFF0);
-        command.data.clear();
-        command.name.clear();
 
         if ((command.opcode == CMD_SET_SCENE) || (command.opcode == CMD_SET_SCENE_LABEL))// && (length == 1)) // tag
         {

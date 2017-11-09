@@ -9,6 +9,9 @@
 #include "TTMPlayer.h"
 #include "RIFFPlayer.h"
 
+#include <memory>
+#include <array>
+
 #ifdef WIN32
 #include <SDL_ttf.h>
 #else
@@ -27,13 +30,13 @@ protected:
     size_t currentMenuPos;
     bool renderMenu;
 
-    RESFile *res;
-    ADSFile *ads;
+	std::shared_ptr<RESFile> res;
+    std::shared_ptr<ADSFile> ads;
     std::vector<Command> script;
     size_t scriptPos;
     std::map<std::pair<std::uint16_t, std::uint16_t>, size_t> labels;
 
-    RIFFPlayer *audioPlayer;
+    std::unique_ptr<RIFFPlayer> audioPlayer;
 
     SDL_Renderer *renderer;
     SDL_Texture *rendererTarget;
@@ -59,9 +62,9 @@ protected:
     SDL_Texture *scrTexture;
 
     //freed by BMPFile
-    BMPFile *backgroundBMP;
-    BMPFile *holidayBMP;
-    BMPFile *raftBMP;
+	std::shared_ptr<BMPFile> backgroundBMP;
+	std::shared_ptr<BMPFile> holidayBMP;
+    std::shared_ptr<BMPFile> raftBMP;
 
     std::list<std::pair<std::uint16_t, std::uint16_t> > lastTTMs;
 
@@ -73,9 +76,9 @@ protected:
     //std::uint16_t currentMovie;
     std::string name;
 
-    std::list<TTMPlayer *> ttmScenes;
+	std::list<std::unique_ptr<TTMPlayer> > ttmScenes;
 
-    BMPFile *images[MAX_IMAGES];
+	std::array <std::shared_ptr<BMPFile>, MAX_IMAGES> images;
 
     std::uint16_t delay;
     std::uint16_t currentMovie;

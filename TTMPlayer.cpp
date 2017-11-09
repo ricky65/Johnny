@@ -6,13 +6,12 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #endif
 
-SCRANTIC::TTMPlayer::TTMPlayer(std::string ttmName, std::uint16_t resNum, std::uint16_t scene, int16_t repeatCount, RESFile *resFile, BMPFile **BMPs, SDL_Color *pal, SDL_Renderer *rendererContext)
+SCRANTIC::TTMPlayer::TTMPlayer(std::string ttmName, std::uint16_t resNum, std::uint16_t scene, int16_t repeatCount, std::shared_ptr<RESFile> resFile, std::array<std::shared_ptr<BMPFile>, MAX_IMAGES> & BMPs, SDL_Color *pal, SDL_Renderer *rendererContext)
     : resNo(resNum), sceneNo(scene), originalScene(scene), repeat(repeatCount), delay(0), remainingDelay(0), imgSlot(0), audioSample(-1), jumpToScript(-1),
       renderer(rendererContext), clipRegion(false), alreadySaved(true), saveNewImage(false), palette(pal), maxTicks(0), selfDestruct(false), selfDestructActive(false),
-      saveImage(false), isDone(false), toBeKilled(false), images(BMPs), res(resFile), ttm(NULL),
-      savedImage(NULL), fg(NULL)
+      saveImage(false), isDone(false), toBeKilled(false), images(BMPs), res(resFile), ttm(nullptr), savedImage(nullptr), fg(nullptr)
 {    
-    ttm = static_cast<TTMFile *>(res->getResource(ttmName));
+    ttm = std::static_pointer_cast<TTMFile>(res->getResource(ttmName));
 
     if (!ttm)
         return;
@@ -294,7 +293,7 @@ void SCRANTIC::TTMPlayer::advanceScript()
             break;
 
         case CMD_LOAD_BITMAP:
-            images[imgSlot] = static_cast<BMPFile *>(res->getResource(cmd.name));
+            images[imgSlot] = std::static_pointer_cast<BMPFile>(res->getResource(cmd.name));
             break;
 
         case CMD_LOAD_PALETTE:

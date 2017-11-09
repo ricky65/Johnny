@@ -24,7 +24,7 @@ SCRANTIC::RIFFPlayer::RIFFPlayer(std::string SCRExe)
     std::uint32_t size;
     std::uint8_t byte;
     SDL_RWops* rwops;
-    std::vector<std::uint8_t> rawAudio;
+    
 
     std::ifstream in;
     in.open(SCRExe, std::ios::binary | std::ios::in);
@@ -43,8 +43,8 @@ SCRANTIC::RIFFPlayer::RIFFPlayer(std::string SCRExe)
         SCRANTIC::BaseFile::u_read_le(&in, size);
         size += 8;
 
-        rawAudio.clear();
-        rawAudio.reserve(size);
+		std::vector<std::uint8_t> rawAudio;
+		rawAudio.reserve(size);
 
         in.seekg(offsets[i], std::ios_base::beg);
 

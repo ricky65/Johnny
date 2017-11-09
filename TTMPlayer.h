@@ -8,6 +8,7 @@
 #include "defines.h"
 
 #include <list>
+#include <array>
 
 #ifdef WIN32
 #include <SDL.h>
@@ -69,9 +70,9 @@ protected:
     SDL_Rect clipRect;
     SDL_Rect saveRect;
 
-    BMPFile **images;
-    RESFile *res;
-    TTMFile *ttm;
+	std::array<std::shared_ptr<BMPFile>, MAX_IMAGES> & images;
+	std::shared_ptr<RESFile> res;
+    std::shared_ptr<TTMFile> ttm;
 
     std::string screen;
 
@@ -95,7 +96,7 @@ public:
     void advanceScript();
     void renderForeground();
 
-    TTMPlayer(std::string ttmName, std::uint16_t resNo, std::uint16_t scene, int16_t repeatCount, RESFile *resFile, BMPFile **images, SDL_Color *pal, SDL_Renderer *rendererContext);
+    TTMPlayer(std::string ttmName, std::uint16_t resNo, std::uint16_t scene, int16_t repeatCount, std::shared_ptr<RESFile> resFile, std::array<std::shared_ptr<BMPFile>, MAX_IMAGES> & BMPs, SDL_Color *pal, SDL_Renderer *rendererContext);
     ~TTMPlayer();
 };
 
