@@ -17,6 +17,16 @@ Release/Johnny Castaway.lib
 *.xml
 *.lastcodeanalysissucceeded
 *.tlog
+*.log
 *.idb
 *.lastbuildstate
+*.obj
+*.ilk
+*.pdb
+*.exe
 
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
