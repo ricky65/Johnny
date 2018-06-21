@@ -25,13 +25,13 @@ protected:
     std::uint16_t resCount;
 
 public:
-    explicit RESFile(std::string name);
+    explicit RESFile(const std::string &name);
     ~RESFile() = default;
     std::map<std::uint8_t, SCRANTIC::resource> resourceMap;
     std::string resFilename;
     std::vector<std::string> ADSFiles;
 
-    std::shared_ptr<BaseFile> getResource(std::string name)
+    std::shared_ptr<BaseFile> getResource(const std::string &name)
 	{
 		for (auto i = std::begin(resourceMap); i != std::end(resourceMap); ++i)
 			if (i->second.filename == name)

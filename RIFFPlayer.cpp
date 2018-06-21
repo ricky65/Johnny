@@ -5,7 +5,7 @@
 
 #include "BaseFile.h"
 
-SCRANTIC::RIFFPlayer::RIFFPlayer(std::string SCRExe)
+SCRANTIC::RIFFPlayer::RIFFPlayer(const std::string &SCRExe)
 {   
     for (int i = 0; i < MAX_AUDIO; ++i)
         audioSamples[i] = NULL;

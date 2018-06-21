@@ -90,7 +90,7 @@ protected:
     SDL_Color defaultPalette[256];
 
 public:
-    explicit BaseFile(std::string name);
+    explicit BaseFile(const std::string &name);
     virtual ~BaseFile();
     std::string filename;
     static std::string commandToString(Command cmd, bool ads = false);
@@ -103,7 +103,7 @@ public:
     template < typename T > static void u_read_le(std::ifstream *in, T &var);
     template < typename T > static void u_read_le(std::vector<std::uint8_t>::iterator &it, T &var);
     template < typename T > static std::string hex_to_string(T t, std::ios_base & (*f)(std::ios_base&));
-    static void saveFile(const std::vector<std::uint8_t> &data, std::string name, std::string path = "");
+    static void saveFile(const std::vector<std::uint8_t> &data, const std::string &name, std::string path = "");
 };
 
 

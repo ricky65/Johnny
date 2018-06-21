@@ -19,7 +19,7 @@ protected:
     Mix_Chunk *audioSamples[MAX_AUDIO];
 
 public:
-    explicit RIFFPlayer(std::string SCRExe);
+    explicit RIFFPlayer(const std::string &SCRExe);
     ~RIFFPlayer();
     void play(std::uint8_t num, bool stopAllOther = true);
 };

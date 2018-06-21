@@ -1,6 +1,6 @@
 #include "PALFile.h"
 
-SCRANTIC::PALFile::PALFile(std::string name, std::vector<std::uint8_t> &data) : BaseFile(name)
+SCRANTIC::PALFile::PALFile(const std::string &name, std::vector<std::uint8_t> &data) : BaseFile(name)
 {
     std::vector<std::uint8_t>::iterator it = data.begin();
 

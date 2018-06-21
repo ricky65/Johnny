@@ -5,7 +5,7 @@
 #include "TTMFile.h"
 #include "ADSFile.h"
 
-SCRANTIC::RESFile::RESFile(std::string name) : BaseFile(name)
+SCRANTIC::RESFile::RESFile(const std::string &name) : BaseFile(name)
 {
     std::ifstream in;
     in.open(filename, std::ios::binary | std::ios::in);

@@ -26,7 +26,7 @@ protected:
     std::map<std::uint16_t, std::vector<Command> > script;
 
 public:
-    TTMFile(std::string name, std::vector<std::uint8_t> &data);
+    TTMFile(const std::string &name, std::vector<std::uint8_t> &data);
     std::vector<Command> getFullScene(std::uint16_t num);
     std::string getTag(std::uint16_t num);
     bool hasInit();

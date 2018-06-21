@@ -1,6 +1,6 @@
 #include "BMPFile.h"
 
-SCRANTIC::BMPFile::BMPFile(std::string name, std::vector<std::uint8_t> &data)
+SCRANTIC::BMPFile::BMPFile(const std::string &name, std::vector<std::uint8_t> &data)
     : BaseFile(name), overview(NULL), ovTexture(NULL)
 {
     std::vector<std::uint8_t>::iterator it = data.begin();

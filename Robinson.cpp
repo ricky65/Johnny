@@ -11,7 +11,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 #endif
 
-SCRANTIC::Robinson::Robinson(std::string ResMap, std::string ScrExe)
+SCRANTIC::Robinson::Robinson(const std::string &ResMap, const std::string &ScrExe)
     : res(std::make_shared<RESFile>(ResMap)), audioPlayer(std::make_unique<RIFFPlayer>(ScrExe)), renderMenu(false), renderer(nullptr),
       movieRunning(false), animationCycle(0), islandPos(NO_ISLAND), ads(nullptr),
       queuedMovie(0), currentMovie(0), delay(0), delayTicks(0)

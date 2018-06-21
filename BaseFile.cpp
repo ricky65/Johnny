@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-SCRANTIC::BaseFile::BaseFile(std::string name) : filename(name)
+SCRANTIC::BaseFile::BaseFile(const std::string &name) : filename(name)
 {
     defaultPalette[0].r = 168;
     defaultPalette[0].g = 0;
@@ -174,7 +174,7 @@ std::string SCRANTIC::BaseFile::read_const_string(std::vector<std::uint8_t>::ite
     return str;
 }
 
-void SCRANTIC::BaseFile::saveFile(const std::vector<std::uint8_t> &data, std::string name, std::string path)
+void SCRANTIC::BaseFile::saveFile(const std::vector<std::uint8_t> &data, const std::string &name, std::string path)
 {
     std::ofstream out;
 

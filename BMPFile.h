@@ -25,7 +25,7 @@ protected:
     void createOverview();
 
 public:
-    BMPFile(std::string name, std::vector<std::uint8_t> &data);
+    BMPFile(const std::string &name, std::vector<std::uint8_t> &data);
     ~BMPFile();
     SDL_Texture *getImage(SDL_Renderer *renderer, std::uint16_t num, SDL_Rect &rect);
     size_t getImageCount() { return imageList.size(); }

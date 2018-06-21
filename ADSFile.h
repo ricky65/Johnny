@@ -32,7 +32,7 @@ protected:
 public:
     std::map<std::uint16_t, std::string> tagList;
 
-    ADSFile(std::string name, std::vector<std::uint8_t> &data);
+    ADSFile(const std::string &name, std::vector<std::uint8_t> &data);
     std::string getResource(std::uint16_t num);
     std::vector<Command> getFullMovie(std::uint16_t num);
     std::map<std::pair<std::uint16_t, std::uint16_t>, size_t> getMovieLabels(std::uint16_t num);

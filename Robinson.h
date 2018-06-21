@@ -99,7 +99,7 @@ protected:
     void runTTMs();
 
 public:
-    Robinson(std::string ResMap, std::string ScrExe);
+    Robinson(const std::string &ResMap, const std::string &ScrExe);
     ~Robinson();
 
     bool navigateMenu(SDL_Keycode key);

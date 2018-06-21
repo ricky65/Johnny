@@ -1,6 +1,6 @@
 #include "TTMFile.h"
 
-SCRANTIC::TTMFile::TTMFile(std::string name, std::vector<std::uint8_t> &data)
+SCRANTIC::TTMFile::TTMFile(const std::string &name, std::vector<std::uint8_t> &data)
     : BaseFile(name)
 {
     std::vector<std::uint8_t>::iterator it = data.begin();

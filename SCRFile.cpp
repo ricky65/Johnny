@@ -1,6 +1,6 @@
 #include "SCRFile.h"
 
-SCRANTIC::SCRFile::SCRFile(std::string name, std::vector<std::uint8_t> &data)
+SCRANTIC::SCRFile::SCRFile(const std::string &name, std::vector<std::uint8_t> &data)
     : BaseFile(name), image(NULL), texture(NULL)
 {
     std::vector<std::uint8_t>::iterator it = data.begin();
