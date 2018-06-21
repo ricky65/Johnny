@@ -91,7 +91,7 @@ protected:
 
 public:
     BaseFile(std::string name);
-    ~BaseFile();
+    virtual ~BaseFile();
     std::string filename;
     static std::string commandToString(Command cmd, bool ads = false);
 
