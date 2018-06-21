@@ -12,14 +12,11 @@
 #endif
 
 SCRANTIC::Robinson::Robinson(std::string ResMap, std::string ScrExe)
-    : res(nullptr), audioPlayer(nullptr), renderMenu(false), renderer(nullptr),
+    : res(std::make_shared<RESFile>(ResMap)), audioPlayer(std::make_unique<RIFFPlayer>(ScrExe)), renderMenu(false), renderer(nullptr),
       movieRunning(false), animationCycle(0), islandPos(NO_ISLAND), ads(nullptr),
       queuedMovie(0), currentMovie(0), delay(0), delayTicks(0)
 {
     std::cout << "--------------- Hello from Robinson Crusoe!---------------" << std::endl;
-
-    res = std::make_shared<RESFile>(ResMap);
-    audioPlayer = std::make_unique<RIFFPlayer>(ScrExe);
 
     std::srand(std::time(0));
 
