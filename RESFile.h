@@ -25,7 +25,7 @@ protected:
     std::uint16_t resCount;
 
 public:
-    RESFile(std::string name);
+    explicit RESFile(std::string name);
     ~RESFile() = default;
     std::map<std::uint8_t, SCRANTIC::resource> resourceMap;
     std::string resFilename;

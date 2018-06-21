@@ -90,7 +90,7 @@ protected:
     SDL_Color defaultPalette[256];
 
 public:
-    BaseFile(std::string name);
+    explicit BaseFile(std::string name);
     virtual ~BaseFile();
     std::string filename;
     static std::string commandToString(Command cmd, bool ads = false);
