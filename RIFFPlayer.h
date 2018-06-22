@@ -8,6 +8,7 @@
 #endif
 
 #include <string>
+#include <array>
 
 #define MAX_AUDIO 24
 
@@ -16,7 +17,7 @@ namespace SCRANTIC {
 class RIFFPlayer
 {
 protected:
-    Mix_Chunk *audioSamples[MAX_AUDIO];
+	std::array<Mix_Chunk *, MAX_AUDIO> audioSamples = {};
 
 public:
     explicit RIFFPlayer(const std::string &SCRExe);
