@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <array>
 #include <memory>
 
 #ifdef WIN32
@@ -87,7 +88,10 @@ protected:
     static std::vector<std::uint8_t> RLEDecompress(std::vector<std::uint8_t> const &compressedData, size_t offset = 0, std::uint32_t size = 0);
     static std::vector<std::uint8_t> RLE2Decompress(std::vector<std::uint8_t> const &compressedData, size_t offset = 0, std::uint32_t size = 0);
     static std::vector<std::uint8_t> LZWDecompress(std::vector<std::uint8_t> const &compressedData, size_t offset = 0, std::uint32_t size = 0);
-    SDL_Color defaultPalette[256];
+	std::array<SDL_Color, 16> defaultPalette = {{
+		{168, 0, 168, 0},{0, 0, 168, 255},{0, 168, 0, 255},{0, 168, 168, 255},{168, 0, 0, 255},{0, 0, 0, 255},{168, 168, 0, 255},{212, 212, 212, 255},
+		{128, 128, 128, 255},{0, 0, 255, 255},{0, 255, 0, 255},{0, 255, 255, 255},{255, 0, 0, 255},{255, 0, 255, 255},{255, 255, 0, 255},{255, 255, 255, 255}
+	}};
 
 public:
     explicit BaseFile(const std::string &name);

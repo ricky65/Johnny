@@ -78,7 +78,7 @@ SCRANTIC::BMPFile::BMPFile(const std::string &name, std::vector<std::uint8_t> &d
     for (std::uint16_t i = 0; i < imageCount; ++i)
     {
         image = SDL_CreateRGBSurface(0, widthList.at(i), heightList.at(i), 8, 0, 0, 0, 0);
-        SDL_SetPaletteColors(image->format->palette, defaultPalette, 0, 256);
+        SDL_SetPaletteColors(image->format->palette, std::data(defaultPalette), 0, std::size(defaultPalette));
         p = (unsigned char*)image->pixels;
 
         for (int y  = 0; y < image->h; ++y)
@@ -174,7 +174,7 @@ void SCRANTIC::BMPFile::createOverview()
     imageRect.clear();
 
     overview = SDL_CreateRGBSurface(0, maxWidth, currentY + lineHeight, 8, 0, 0, 0, 0);
-    SDL_SetPaletteColors(overview->format->palette, defaultPalette, 0, 256);
+    SDL_SetPaletteColors(overview->format->palette, std::data(defaultPalette), 0, std::size(defaultPalette));
     currentWidth = 0;
     currentY = 0;
     lineHeight = 0;
