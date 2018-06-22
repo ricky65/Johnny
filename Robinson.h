@@ -31,7 +31,7 @@ protected:
     ADSFile *ads;
     std::vector<Command> script;
     size_t scriptPos;
-    std::map<std::pair<u_int16_t, u_int16_t>, size_t> labels;
+    std::multimap<std::pair<u_int16_t, u_int16_t>, size_t> labels;
 
     RIFFPlayer *audioPlayer;
 
@@ -91,7 +91,7 @@ protected:
     void animateBackground();
     void displaySplash();
 
-    bool setPosToLabel(std::pair<u_int16_t, u_int16_t> lastPlayed);
+    size_t setPosToLabel(std::pair<u_int16_t, u_int16_t> lastPlayed, size_t next = 0);
     void addTTM(Command cmd);
     void runTTMs();
 

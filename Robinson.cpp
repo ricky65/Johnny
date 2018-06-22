@@ -611,6 +611,17 @@ void SCRANTIC::Robinson::addTTM(Command cmd)
             std::cout << name << ": TTM Movie with blob " << (int16_t)cmd.data.at(2) << std::endl;
     }
 
+    //check if a TTM matching this hash already exists - if it does do nothing
+    std::pair<u_int16_t, u_int16_t> hash = std::make_pair(cmd.data.at(0), cmd.data.at(1));
+    std::list<TTMPlayer *>::iterator it = ttmScenes.begin();
+    while (it != ttmScenes.end())
+    {
+        if ((*it)->getHash() == hash)
+            return;
+        else
+            ++it;
+    }
+
     TTMPlayer *ttm = new TTMPlayer(ads->getResource(cmd.data.at(0)), cmd.data.at(0), sceneNum, repeat, res, images, palette, renderer);
 
     // this assumes the only relavant action in the init scripts
@@ -654,14 +665,34 @@ void SCRANTIC::Robinson::addTTM(Command cmd)
     ttmScenes.push_back(ttm);
 }
 
-bool SCRANTIC::Robinson::setPosToLabel(std::pair<u_int16_t, u_int16_t> lastPlayed)
+size_t SCRANTIC::Robinson::setPosToLabel(std::pair<u_int16_t, u_int16_t> lastPlayed, size_t next)
 {
-    auto it = labels.find(lastPlayed);
-    if (it == labels.end())
-        return false;
+    size_t matches = labels.count(lastPlayed);
 
-    scriptPos = it->second;
-    return true;
+    if (!matches)
+        return 0;
+
+    if (matches > 1)
+        std::cout << "==================== multiple ADS Labels " << matches << std::endl;
+
+    if (next == 0)
+    {
+        auto it = labels.find(lastPlayed);
+        scriptPos = it->second;
+    }
+    else
+    {
+        std::cout << "==================== multiple ADS Labels jumping to " << next << " label" << std::endl;
+        std::pair<std::multimap<std::pair<u_int16_t, u_int16_t>, size_t>::iterator, std::multimap<std::pair<u_int16_t, u_int16_t>, size_t>::iterator> ret;
+        ret = labels.equal_range(lastPlayed);
+        for (auto iteq = ret.first; iteq != ret.second; ++iteq)
+            if (next)
+                next--;
+            else
+                scriptPos = iteq->second;
+    }
+
+    return matches;
 }
 
 void SCRANTIC::Robinson::runTTMs()
@@ -740,6 +771,8 @@ void SCRANTIC::Robinson::advanceADSScript(std::pair<u_int16_t, u_int16_t> lastPl
     bool firstRun = false;
     bool isRandom = false;
     size_t randomPick;
+    size_t labelCount = 0;
+    size_t labelDone = 0;
 
     std::pair<u_int16_t, u_int16_t> hash;
     std::list<TTMPlayer *>::iterator it;
@@ -753,7 +786,8 @@ void SCRANTIC::Robinson::advanceADSScript(std::pair<u_int16_t, u_int16_t> lastPl
         firstRun = true;
     else
     {
-        if (!setPosToLabel(lastPlayed))
+        labelCount = setPosToLabel(lastPlayed);
+        if (!labelCount)
         {
             //std::cout << name << ": no label found for: " << lastPlayed.first << " " << lastPlayed.second << std::endl;
             if (!ttmScenes.size())
@@ -785,8 +819,15 @@ void SCRANTIC::Robinson::advanceADSScript(std::pair<u_int16_t, u_int16_t> lastPl
             break;
 
         case CMD_PLAY_MOVIE:
-            runTTMs();
-            return;
+            labelDone++;
+            if (labelCount <= labelDone)
+            {
+                runTTMs();
+                return;
+            }
+            else
+                setPosToLabel(lastPlayed, labelDone);
+            break;
 
         case CMD_ADD_TTM: //TTM Scene ??? Repeat
             if (isRandom)
