@@ -18,8 +18,6 @@ SCRANTIC::Robinson::Robinson(const std::string &ResMap, const std::string &ScrEx
 {
     std::cout << "--------------- Hello from Robinson Crusoe!---------------" << std::endl;
 
-    std::srand(std::time(0));
-
     std::shared_ptr<PALFile> pal = std::static_pointer_cast<PALFile>(res->getResource("JOHNCAST.PAL"));
     for (auto it = res->resourceMap.begin(); it != res->resourceMap.end(); ++it)
 		if (it->second.filetype == "BMP") {
@@ -132,8 +130,8 @@ void SCRANTIC::Robinson::initRenderer(SDL_Renderer *rendererSDL)
     displaySplash();
 
     // init island
-    islandNight = std::rand() % 2;
-    islandLarge = std::rand() % 2;
+    islandNight = Random::get<bool>();
+    islandLarge = Random::get<bool>();
     islandPos = NO_ISLAND;
     islandTrunk.x = ISLAND_TEMP_X;
     islandTrunk.y = ISLAND_TEMP_Y;
@@ -141,8 +139,8 @@ void SCRANTIC::Robinson::initRenderer(SDL_Renderer *rendererSDL)
     // random pick ocean (0-2)
     oceanRect.x = 0;
     oceanRect.y = 0;
-    std::uint8_t random = std::rand() % 3;
-    std::string ocean = "OCEAN0"+std::to_string(random)+".SCR";
+    std::uint8_t random = Random::get<std::uint8_t>(0, 2);
+    std::string ocean = "OCEAN0" + std::to_string(random) + ".SCR";
 
     // load SCR files
     oceanTexture = std::static_pointer_cast<SCRFile>(res->getResource(ocean))->getImage(renderer, oceanRect);
@@ -397,11 +395,11 @@ void SCRANTIC::Robinson::resetPlayer()
 
 	ttmScenes.clear();
 
-	islandNight = std::rand() % 2;
-	std::uint8_t random = std::rand() % 3;
+	islandNight = Random::get<bool>();
+	islandLarge = Random::get<bool>();
+	std::uint8_t random = Random::get<std::uint8_t>(0, 2);
 	std::string ocean = "OCEAN0" + std::to_string(random) + ".SCR";
 	oceanTexture = std::static_pointer_cast<SCRFile>(res->getResource(ocean))->getImage(renderer, oceanRect);
-	islandLarge = std::rand() % 2;
 
 	movieRunning = false;
 	scrTexture = NULL;
@@ -725,9 +723,9 @@ void SCRANTIC::Robinson::advanceADSScript(std::pair<std::uint16_t, std::uint16_t
     Command cmd;
     std::vector<Command> pickRandom;
 
-    bool firstRun = false;
-    bool isRandom = false;
-    size_t randomPick;
+	bool firstRun = false;
+	bool isRandom = false;
+	size_t randomPick;
 
     std::pair<std::uint16_t, std::uint16_t> hash;
 	std::list<std::unique_ptr<TTMPlayer> >::iterator it;
@@ -806,7 +804,7 @@ void SCRANTIC::Robinson::advanceADSScript(std::pair<std::uint16_t, std::uint16_t
 
         case CMD_RANDOM_END:
             isRandom = false;
-            randomPick = std::rand() % pickRandom.size();
+			randomPick = Random::get<std::size_t>(0, pickRandom.size() - 1);
             std::cout << "Random pick: " << randomPick << std::endl;
             addTTM(pickRandom[randomPick]);
             break;

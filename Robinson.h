@@ -9,6 +9,8 @@
 #include "TTMPlayer.h"
 #include "RIFFPlayer.h"
 
+#include "libraries/effolkronium/random.hpp"
+
 #include <memory>
 #include <array>
 
@@ -119,6 +121,8 @@ public:
 
     std::uint32_t getCurrentDelay() { return delay; }
     void displayMenu(bool show) { renderMenu = show; }
+
+	using Random = effolkronium::random_static;
 };
 
 }

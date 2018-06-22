@@ -127,6 +127,7 @@
     <ClInclude Include="BaseFile.h" />
     <ClInclude Include="BMPFile.h" />
     <ClInclude Include="defines.h" />
+    <ClInclude Include="libraries\effolkronium\random.hpp" />
     <ClInclude Include="PALFile.h" />
     <ClInclude Include="RESFile.h" />
     <ClInclude Include="RIFFPlayer.h" />
