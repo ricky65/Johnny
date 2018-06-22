@@ -60,8 +60,8 @@ std::string SCRANTIC::BaseFile::read_string(std::vector<std::uint8_t>::iterator 
     }
 
     if (length)
-        for (i = i; i < length; ++i)
-            ++it;
+        for (; i < length; ++i)
+            ++it;	
 
     return str;
 }
