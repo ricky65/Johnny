@@ -31,11 +31,10 @@ SCRANTIC::Robinson::Robinson(const std::string &ResMap, const std::string &ScrEx
 #ifdef DUMP_ADS
     std::string adsstring;
     std::string num;
-    ADSFile *dump;
     for (size_t i = 0; i < res->ADSFiles.size(); ++i)
     {
         adsstring = res->ADSFiles.at(i);
-        dump = static_cast<ADSFile *>(res->getResource(adsstring));
+		std::shared_ptr<ADSFile> dump = std::static_pointer_cast<ADSFile>(res->getResource(adsstring));
 
         std::cout << "Filename: " << dump->filename << std::endl;
 
@@ -51,7 +50,7 @@ SCRANTIC::Robinson::Robinson(const std::string &ResMap, const std::string &ScrEx
         std::string cmdString;
         std::string ttmName;
         Command *cmd;
-        TTMFile *ttm;
+		std::shared_ptr<TTMFile> ttm;
         for (auto it = dump->script.begin(); it != dump->script.end(); ++it)
         {
             std::cout << "Movie number: " << it->first << " - 0x" << SCRANTIC::BaseFile::hex_to_string(it->first, std::hex) << std::endl;
@@ -70,7 +69,7 @@ SCRANTIC::Robinson::Robinson(const std::string &ResMap, const std::string &ScrEx
                 case CMD_KILL_TTM:
                 case CMD_UNK_1370:
                     ttmName = dump->getResource(cmd->data.at(0));
-                    ttm = static_cast<TTMFile *>(res->getResource(ttmName));
+                    ttm = std::static_pointer_cast<TTMFile>(res->getResource(ttmName));
                     //cmdString += "| " + ttmName + " - " + ttm->getTag(cmd->data.at(1));
                     cmdString += "| " + ttm->getTag(cmd->data.at(1));
                     break;
@@ -79,7 +78,7 @@ SCRANTIC::Robinson::Robinson(const std::string &ResMap, const std::string &ScrEx
                     for (size_t j = 0; j < cmd->data.size(); j+=2)
                     {
                         ttmName = dump->getResource(cmd->data.at(j));
-                        ttm = static_cast<TTMFile *>(res->getResource(ttmName));
+                        ttm = std::static_pointer_cast<TTMFile>(res->getResource(ttmName));
                         cmdString += "| " + ttm->getTag(cmd->data.at(j+1)) + " ";
                     }
                     break;
