@@ -388,6 +388,25 @@ void SCRANTIC::Robinson::startMovie()
     delay = 0;
 }
 
+void SCRANTIC::Robinson::playRandomMovie()
+{
+	//pick random ADS File
+	const auto randomADSFilenameIter = Random::get(res->ADSFiles);
+	const std::string randomADSFilename = *randomADSFilenameIter;
+
+	//pick random movie in ADS File
+	std::shared_ptr<ADSFile> adsfile = std::static_pointer_cast<ADSFile>(res->getResource(randomADSFilename));
+	const auto randomMovieMapIter = Random::get(adsfile->tagList);
+	const auto randomMoviePair = *randomMovieMapIter;
+	const std::uint16_t randomMovieId = randomMoviePair.first;
+	const std::string randomMovieName = randomMoviePair.second;
+
+	std::cout << "Picked Random Movie:\n ADS Filename: " << randomADSFilename << "\n Tag ID: " << randomMovieId << "\n Tag Name: " << randomMovieName << '\n';
+
+	loadMovie(randomADSFilename, randomMovieId);
+	startMovie();
+}
+
 void SCRANTIC::Robinson::resetPlayer()
 {
 	//currentMovie = 0;

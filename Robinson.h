@@ -119,6 +119,8 @@ public:
     bool loadMovie(std::string adsName, std::uint16_t num);
     void startMovie();
 
+	void playRandomMovie();
+
     std::uint32_t getCurrentDelay() { return delay; }
     void displayMenu(bool show) { renderMenu = show; }
 

@@ -124,8 +124,17 @@ int main(int argc, char *args[])
     crusoe.initRenderer(g_Renderer);
     crusoe.initMenu(g_Font);
 
-    crusoe.loadMovie("VISITOR.ADS", 3);
-    crusoe.startMovie();
+	bool randomMovieMode = true;
+
+	if (randomMovieMode)
+	{
+		crusoe.playRandomMovie();
+	}
+	else
+	{	
+		crusoe.loadMovie("VISITOR.ADS", 3);
+		crusoe.startMovie();
+	}	
 
 	bool quit = false;
     SDL_Event e;
