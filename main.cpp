@@ -152,8 +152,13 @@ int main(int argc, char *args[])
         if (!waiting)
         {
             crusoe.advanceScripts();
-            if (!crusoe.isMovieRunning())
-                crusoe.displayMenu(true);
+			if (!crusoe.isMovieRunning()) {
+				if (randomMovieMode)
+					crusoe.playRandomMovie();
+				else
+					crusoe.displayMenu(true);
+			}
+
             delay = crusoe.getCurrentDelay();
             if (delay == 0)
                 delay = 100;
