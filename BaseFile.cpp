@@ -100,8 +100,9 @@ void SCRANTIC::BaseFile::saveFile(const std::vector<std::uint8_t> &data, const s
 {
     std::ofstream out;
 
-    if (path.length() && (path[path.length()-1] != '/'))
-        path += "/";
+	if (!path.empty() && path.back() != '/') {
+		path.push_back('/');
+	}
 
     out.open(path + name, std::ios::binary | std::ios::out);
     out.unsetf(std::ios::skipws);

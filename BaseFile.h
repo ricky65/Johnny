@@ -9,6 +9,8 @@
 #include <array>
 #include <memory>
 
+#include "defines.h"
+
 #ifdef WIN32
 #include <SDL.h>
 #else

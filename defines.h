@@ -85,4 +85,8 @@
 #define MAX_IMAGES 10
 #define MAX_AUDIO 24
 
+//#define DUMP_ADS
+//#define EXTRACT_RESOURCES
+//#define EXTRACT_PATH "C:/Johnny_Castaway_Resources/"
+
 #endif // DEFINES_H

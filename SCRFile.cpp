@@ -56,7 +56,9 @@ SCRANTIC::SCRFile::SCRFile(const std::string &name, std::vector<std::uint8_t> &d
     if (!uncompressedData.size())
         return;
 
-    //saveFile(uncompressedData, filename, "res/SCR/");
+#ifdef EXTRACT_RESOURCES
+    saveFile(uncompressedData, filename, EXTRACT_PATH"SCR/");
+#endif
 
     image = SDL_CreateRGBSurface(0, width, height, 8, 0, 0, 0, 0);
     SDL_SetPaletteColors(image->format->palette, std::data(defaultPalette), 0, std::size(defaultPalette));

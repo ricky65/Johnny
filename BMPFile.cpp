@@ -66,7 +66,9 @@ SCRANTIC::BMPFile::BMPFile(const std::string &name, std::vector<std::uint8_t> &d
     if (!uncompressedData.size())
         return;
 
-    //saveFile(uncompressedData, filename, "res/BMP/");
+#ifdef EXTRACT_RESOURCES
+	const std::string BMPfilePath = EXTRACT_PATH"BMP/" + filename;
+#endif
 
     size_t z = 0;
     bool high = false;
@@ -99,6 +101,11 @@ SCRANTIC::BMPFile::BMPFile(const std::string &name, std::vector<std::uint8_t> &d
             }
 
         imageList.push_back(image);
+
+#ifdef EXTRACT_RESOURCES
+		SDL_SaveBMP(image, std::data(BMPfilePath));
+#endif
+
     }
     createOverview();
 }

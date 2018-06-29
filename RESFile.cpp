@@ -81,7 +81,11 @@ SCRANTIC::RESFile::RESFile(const std::string &name) : BaseFile(name)
 
         resourceMap.insert(std::pair<std::uint8_t, SCRANTIC::resource>(i, newRes));
 
-        //saveFile(newRes.data, newRes.filename, "res/");
+#ifdef EXTRACT_RESOURCES
+		//saving of BMP and SCR files handled elsewhere
+		if (newRes.filetype != "BMP" && newRes.filetype != "SCR")
+			saveFile(newRes.data, newRes.filename, EXTRACT_PATH);
+#endif
     }
 
     res.close();
