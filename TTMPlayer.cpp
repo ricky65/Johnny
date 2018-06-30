@@ -17,7 +17,7 @@ SCRANTIC::TTMPlayer::TTMPlayer(std::string ttmName, std::uint16_t resNum, std::u
         return;
 
     script = ttm->getFullScene(scene);
-    if (script.size())
+    if (!script.empty())
         scriptPos = script.begin();
 
     name = ttm->filename + " - " + ttm->getTag(scene);
@@ -93,7 +93,7 @@ void SCRANTIC::TTMPlayer::advanceScript()
             sceneNo = jumpToScript;
             script.clear();
             script = ttm->getFullScene(sceneNo);
-            if (script.size())
+            if (!script.empty())
                 scriptPos = script.begin();
 
             name = ttm->filename + " - " + ttm->getTag(sceneNo);

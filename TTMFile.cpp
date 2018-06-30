@@ -53,7 +53,7 @@ SCRANTIC::TTMFile::TTMFile(const std::string &name, std::vector<std::uint8_t> &d
 
     std::advance(it, ttmSize);
 
-    /*if (!rawScript.size())
+    /*if (rawScript.empty())
         return;*/
 
     tmp = read_const_string(it, 4);
@@ -86,7 +86,7 @@ SCRANTIC::TTMFile::TTMFile(const std::string &name, std::vector<std::uint8_t> &d
         tagList.insert(std::pair<std::uint16_t, std::string>(id, desc));
     }
 
-    if (!rawScript.size())
+    if (rawScript.empty())
         return;
 
     it = rawScript.begin();

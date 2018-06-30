@@ -364,7 +364,7 @@ bool SCRANTIC::Robinson::loadMovie(std::string adsName, std::uint16_t num)
         return false;
 
     script = ads->getFullMovie(num);
-    if (script.size())
+    if (!script.empty())
         scriptPos = 0;
     else
         return false;
@@ -710,10 +710,10 @@ void SCRANTIC::Robinson::runTTMs()
 
 void SCRANTIC::Robinson::advanceScripts()
 {    
-    if (ttmScenes.size())
+    if (!ttmScenes.empty())
     {
         runTTMs();
-        if (lastTTMs.size())
+        if (!lastTTMs.empty())
         {
             for (auto it = lastTTMs.begin(); it != lastTTMs.end(); ++it)
                 advanceADSScript((*it));
@@ -726,7 +726,7 @@ void SCRANTIC::Robinson::advanceScripts()
 
 void SCRANTIC::Robinson::advanceADSScript(std::pair<std::uint16_t, std::uint16_t> lastPlayed)
 {
-    if (!script.size())
+    if (script.empty())
         return;
 
     if (!movieRunning)
@@ -760,7 +760,7 @@ void SCRANTIC::Robinson::advanceADSScript(std::pair<std::uint16_t, std::uint16_t
         if (!setPosToLabel(lastPlayed))
         {
             //std::cout << name << ": no label found for: " << lastPlayed.first << " " << lastPlayed.second << std::endl;
-            if (!ttmScenes.size())
+            if (ttmScenes.empty())
                 movieRunning = false;
             return;
         }

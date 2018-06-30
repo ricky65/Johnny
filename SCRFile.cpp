@@ -53,7 +53,7 @@ SCRANTIC::SCRFile::SCRFile(const std::string &name, std::vector<std::uint8_t> &d
     if (uncompressedSize != (std::uint32_t)uncompressedData.size())
         std::cerr << filename << ": decompression error: expected size: " << (size_t)uncompressedSize  << " - got " << uncompressedData.size() << std::endl;
 
-    if (!uncompressedData.size())
+    if (uncompressedData.empty())
         return;
 
 #ifdef EXTRACT_RESOURCES
