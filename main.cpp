@@ -75,9 +75,9 @@ bool init()
                 "Johnny's World",
                 SDL_WINDOWPOS_UNDEFINED,
                 SDL_WINDOWPOS_UNDEFINED,
-                640,
-                480,
-                SDL_WINDOW_SHOWN);
+                SCREEN_WIDTH,
+                SCREEN_HEIGHT,
+				SDL_WINDOW_SHOWN);// SDL_WINDOW_FULLSCREEN_DESKTOP
 
     if (g_Mainwindow == NULL)
     {
@@ -95,7 +95,7 @@ bool init()
     }
 
     // Set size of renderer to the same as window
-    SDL_RenderSetLogicalSize(g_Renderer, 640, 480);
+    SDL_RenderSetLogicalSize(g_Renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     return true;
 }

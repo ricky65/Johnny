@@ -10,9 +10,11 @@
 #include "RIFFPlayer.h"
 
 #include "libraries/effolkronium/random.hpp"
+#include "libraries/date/date.h"
 
 #include <memory>
 #include <array>
+#include <optional>
 
 #ifdef WIN32
 #include <SDL_ttf.h>
@@ -21,6 +23,14 @@
 #endif
 
 namespace SCRANTIC {
+
+enum SPECIAL_DAY : std::uint16_t 
+{
+	HALLOWEEN = 0,
+	SAINT_PATRICKS_DAY = 1,
+	CHRISTMAS = 2,
+	NEW_YEARS_DAY = 3
+};
 
 class Robinson
 {
@@ -44,10 +54,15 @@ protected:
     SDL_Texture *rendererTarget;
 
     SDL_Color *palette;
+	
+	// raft sprite (0-6)
+	std::uint16_t raftSpriteNum;
+
+	std::optional<SCRANTIC::SPECIAL_DAY> specialDay;
 
     int8_t animationCycle;
     int8_t islandPos;
-    SDL_Point islandTrunk;
+    SDL_Point islandTrunk;	
 
     bool islandNight;
     bool islandLarge;
@@ -92,9 +107,10 @@ protected:
     void resetPlayer();
 
     void menuRenderer();
-    void renderBackgroundAtPos(std::uint16_t num, int32_t x, int32_t y, bool raft = false, bool holiday = false);
+    void renderBackgroundAtPos(std::uint16_t num, int32_t x, int32_t y, bool raft = false);
     void animateBackground();
     void displaySplash();
+	void renderSpecialDay(SPECIAL_DAY specialEvent, int32_t x, int32_t y);
 
     bool setPosToLabel(std::pair<std::uint16_t, std::uint16_t> lastPlayed);
     void addTTM(Command cmd);
@@ -120,6 +136,8 @@ public:
     void startMovie();
 
 	void playRandomMovie();
+
+	std::optional<SCRANTIC::SPECIAL_DAY> getSpecialDay();
 
     std::uint32_t getCurrentDelay() { return delay; }
     void displayMenu(bool show) { renderMenu = show; }

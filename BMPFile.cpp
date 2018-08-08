@@ -154,7 +154,7 @@ void SCRANTIC::BMPFile::createOverview()
 {
     std::uint16_t currentWidth = 0;
     std::uint16_t lineHeight = 0;
-    std::uint16_t maxWidth = 640;
+    std::uint16_t maxWidth = SCREEN_WIDTH;
     std::uint16_t imgWidth, imgHeight;
     std::uint16_t currentY = 0;
 

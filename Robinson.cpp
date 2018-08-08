@@ -19,13 +19,15 @@ SCRANTIC::Robinson::Robinson(const std::string &ResMap, const std::string &ScrEx
     std::cout << "--------------- Hello from Robinson Crusoe!---------------" << std::endl;
 
     std::shared_ptr<PALFile> pal = std::static_pointer_cast<PALFile>(res->getResource("JOHNCAST.PAL"));
-    for (auto it = res->resourceMap.begin(); it != res->resourceMap.end(); ++it)
+	for (auto it = res->resourceMap.begin(); it != res->resourceMap.end(); ++it)
+	{
 		if (it->second.filetype == "BMP") {
 			std::static_pointer_cast<BMPFile>(it->second.handle)->setPalette(pal->getPalette(), 256);
 		}
 		else if (it->second.filetype == "SCR") {
 			std::static_pointer_cast<SCRFile>(it->second.handle)->setPalette(pal->getPalette(), 256);
 		}
+	}
     palette = pal->getPalette();
 
 #ifdef DUMP_ADS
@@ -135,6 +137,12 @@ void SCRANTIC::Robinson::initRenderer(SDL_Renderer *rendererSDL)
     islandTrunk.x = ISLAND_TEMP_X;
     islandTrunk.y = ISLAND_TEMP_Y;
 
+	// pick random raft sprite (0-6)
+	raftSpriteNum = Random::get<std::uint16_t>(0, 6);
+
+	// check for special day
+	specialDay = getSpecialDay();
+
     // random pick ocean (0-2)
     oceanRect.x = 0;
     oceanRect.y = 0;
@@ -155,8 +163,8 @@ void SCRANTIC::Robinson::initRenderer(SDL_Renderer *rendererSDL)
     // many rects
     fullRect.x = 0;
     fullRect.y = 0;
-    fullRect.w = 640;
-    fullRect.h = 480;
+    fullRect.w = SCREEN_WIDTH;
+    fullRect.h = SCREEN_HEIGHT;
 
     // width/heigth gets filled in on load
     screenRect.x = 0;
@@ -206,7 +214,7 @@ void SCRANTIC::Robinson::initMenu(TTF_Font *font)
         adsstring = res->ADSFiles.at(i);
         ads = std::static_pointer_cast<ADSFile>(res->getResource(adsstring));
 
-        menu = SDL_CreateRGBSurface(0, 640, 480, 32, 0, 0, 0, 0);
+        menu = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 
         rect.y = 10;
 
@@ -341,7 +349,7 @@ bool SCRANTIC::Robinson::navigateMenu(SDL_Keycode key)
 
 void SCRANTIC::Robinson::menuRenderer()
 {
-    SDL_Texture *tex;
+    //SDL_Texture *tex;
 
     auto it = menuScreen.find(currentMenuScreen);
     if (it == menuScreen.end())
@@ -407,6 +415,28 @@ void SCRANTIC::Robinson::playRandomMovie()
 	startMovie();
 }
 
+std::optional<SCRANTIC::SPECIAL_DAY> SCRANTIC::Robinson::getSpecialDay()
+{
+	using namespace date;
+
+	auto today = year_month_day ( floor<days>(std::chrono::system_clock::now()) );	
+
+	if (today.month() == December)
+		return SPECIAL_DAY::CHRISTMAS;
+
+	if (today.month() == January && today.day() == 1_d)
+		return SPECIAL_DAY::NEW_YEARS_DAY;
+
+	if (today.month() == March && today.day() == 17_d )
+		return SPECIAL_DAY::SAINT_PATRICKS_DAY;
+
+	//show pumpkin in week preceeding Halloween
+	if (today.month() == October && (today.day() >= 24_d && today.day() <= 31_d))
+		return SPECIAL_DAY::HALLOWEEN;
+
+	return std::nullopt;
+}
+
 void SCRANTIC::Robinson::resetPlayer()
 {
 	//currentMovie = 0;
@@ -423,6 +453,12 @@ void SCRANTIC::Robinson::resetPlayer()
 	scrTexture = NULL;
 	islandPos = NO_ISLAND;
 
+	// raft sprite (0-6)
+	raftSpriteNum = Random::get<std::uint16_t>(0, 6);
+
+	// check for special day
+	specialDay = getSpecialDay();
+
 	lastTTMs.clear();
 
 	delay = 0;
@@ -438,16 +474,10 @@ void SCRANTIC::Robinson::resetPlayer()
     SDL_SetRenderTarget(renderer, rendererTarget);
 }
 
-void SCRANTIC::Robinson::renderBackgroundAtPos(std::uint16_t num, int32_t x, int32_t y, bool raft, bool holiday)
+void SCRANTIC::Robinson::renderBackgroundAtPos(std::uint16_t num, int32_t x, int32_t y, bool raft)
 {
     SDL_Rect src, dest;
-    SDL_Texture *bkg;
-    if (!raft && !holiday)
-        bkg = backgroundBMP->getImage(renderer, num, src);
-    else if (raft)
-        bkg = raftBMP->getImage(renderer, num, src);
-    else
-        bkg = holidayBMP->getImage(renderer, num, src);
+    SDL_Texture *bkg = !raft ? backgroundBMP->getImage(renderer, num, src) : raftBMP->getImage(renderer, num, src);
 
     dest.x = x;
     dest.y = y;
@@ -482,6 +512,19 @@ void SCRANTIC::Robinson::animateBackground()
        animationCycle = 0;
 }
 
+//render special day sprite in foreground
+void SCRANTIC::Robinson::renderSpecialDay(SPECIAL_DAY specialEvent, int32_t x, int32_t y)
+{
+	SDL_Rect src, dest;
+	SDL_Texture * specialDayTexture = holidayBMP->getImage(renderer, specialEvent, src);
+
+	dest.x = x;
+	dest.y = y;
+	dest.w = src.w;
+	dest.h = src.h;
+	SDL_RenderCopy(renderer, specialDayTexture, &src, &dest);
+}
+
 void SCRANTIC::Robinson::render()
 {
     SDL_Rect tmpRect;
@@ -509,9 +552,10 @@ void SCRANTIC::Robinson::render()
         renderBackgroundAtPos(SPRITE_TOP_SHADOW, TOP_SHADOW_X + islandTrunk.x, TOP_SHADOW_Y + islandTrunk.y);
         renderBackgroundAtPos(SPRITE_TRUNK, islandTrunk.x, islandTrunk.y);
         renderBackgroundAtPos(SPRITE_TOP, TOP_X + islandTrunk.x, TOP_Y + islandTrunk.y);
-        renderBackgroundAtPos(0, RAFT_X + islandTrunk.x, RAFT_Y + islandTrunk.y, true);
 
-        animateBackground();
+        renderBackgroundAtPos(raftSpriteNum, RAFT_X + islandTrunk.x, RAFT_Y + islandTrunk.y, true);		
+
+        animateBackground();		
     }
     else
     {
@@ -535,21 +579,16 @@ void SCRANTIC::Robinson::render()
         }
 
         //pre render foreground
-        (*it)->renderForeground();
+        (*it)->renderForeground();		
     }
     // background end
-
-    SDL_Rect tmp;
-    tmp.w = 320;
-    tmp.h = 240;
-    tmp.x = 0;
-    tmp.y = 0;
+	
     // render everything to screen
-    SDL_SetRenderTarget(renderer, rendererTarget);
-    SDL_RenderClear(renderer);
+	SDL_SetRenderTarget(renderer, rendererTarget);
+	SDL_RenderClear(renderer);	
 
     SDL_RenderCopy(renderer, bgTexture, &fullRect, &fullRect);
-    SDL_RenderCopy(renderer, saveTexture, &fullRect, &fullRect);
+	SDL_RenderCopy(renderer, saveTexture, &fullRect, &fullRect);
 
     std::string scrName;
     int16_t audio;
@@ -592,6 +631,36 @@ void SCRANTIC::Robinson::render()
             screenRect.y = 0;
         }
     }
+
+	if (specialDay && islandPos != NO_ISLAND) 
+	{
+		switch (*specialDay)
+		{
+		case SPECIAL_DAY::NEW_YEARS_DAY:
+			renderSpecialDay(SPECIAL_DAY::NEW_YEARS_DAY, NEW_YEARS_DAY_X + islandTrunk.x, NEW_YEARS_DAY_Y + islandTrunk.y);
+			break;
+		case SPECIAL_DAY::CHRISTMAS:
+			if (islandLarge) 
+				renderSpecialDay(SPECIAL_DAY::CHRISTMAS, CHRISTMAS_LARGE_ISLAND_X + islandTrunk.x, CHRISTMAS_LARGE_ISLAND_Y + islandTrunk.y);
+			else
+				renderSpecialDay(SPECIAL_DAY::CHRISTMAS, CHRISTMAS_SMALL_ISLAND_X + islandTrunk.x, CHRISTMAS_SMALL_ISLAND_Y + islandTrunk.y);
+			break;
+		case SPECIAL_DAY::HALLOWEEN:
+			if (islandLarge)
+				renderSpecialDay(SPECIAL_DAY::HALLOWEEN, HALLOWEEN_LARGE_ISLAND_X + islandTrunk.x, HALLOWEEN_LARGE_ISLAND_Y + islandTrunk.y);
+			else
+				renderSpecialDay(SPECIAL_DAY::HALLOWEEN, HALLOWEEN_SMALL_ISLAND_X + islandTrunk.x, HALLOWEEN_SMALL_ISLAND_Y + islandTrunk.y);
+			break;
+		case SPECIAL_DAY::SAINT_PATRICKS_DAY:
+			if (islandLarge)
+				renderSpecialDay(SPECIAL_DAY::SAINT_PATRICKS_DAY, SAINT_PATRICKS_DAY_LARGE_ISLAND_X + islandTrunk.x, SAINT_PATRICKS_DAY_LARGE_ISLAND_Y + islandTrunk.y);
+			else
+				renderSpecialDay(SPECIAL_DAY::SAINT_PATRICKS_DAY, SAINT_PATRICKS_DAY_SMALL_ISLAND_X + islandTrunk.x, SAINT_PATRICKS_DAY_SMALL_ISLAND_Y + islandTrunk.y);
+			break;
+		default:
+			break;
+		}			
+	}
 
     if (renderMenu)
         menuRenderer();

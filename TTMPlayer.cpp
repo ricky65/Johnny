@@ -22,15 +22,15 @@ SCRANTIC::TTMPlayer::TTMPlayer(std::string ttmName, std::uint16_t resNum, std::u
 
     name = ttm->filename + " - " + ttm->getTag(scene);
 
-    savedImage = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, 640, 480);
-    fg = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, 640, 480);
+    savedImage = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
+    fg = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_SetTextureBlendMode(savedImage, SDL_BLENDMODE_BLEND);
     SDL_SetTextureBlendMode(fg, SDL_BLENDMODE_BLEND);
 
     saveRect.x = 0;
     saveRect.h = 0;
-    saveRect.w = 640;
-    saveRect.h = 480;
+    saveRect.w = SCREEN_WIDTH;
+    saveRect.h = SCREEN_HEIGHT;
 
     if (repeat < 0)
     {
@@ -182,10 +182,10 @@ void SCRANTIC::TTMPlayer::advanceScript()
             clipRect.y = (int16_t)cmd.data.at(1);
             clipRect.w = cmd.data.at(2) - clipRect.x;
             clipRect.h = cmd.data.at(3) - clipRect.y;
-            if (clipRect.x + clipRect.w >= 640)
-                clipRect.w = 640 - clipRect.x;
-            if (clipRect.y + clipRect.h >= 480)
-                clipRect.h = 480 - clipRect.y;
+            if (clipRect.x + clipRect.w >= SCREEN_WIDTH)
+                clipRect.w = SCREEN_WIDTH - clipRect.x;
+            if (clipRect.y + clipRect.h >= SCREEN_HEIGHT)
+                clipRect.h = SCREEN_HEIGHT - clipRect.y;
             clipRegion = true;
             break;
 
