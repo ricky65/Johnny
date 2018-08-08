@@ -58,6 +58,15 @@ protected:
 	// raft sprite (0-6)
 	std::uint16_t raftSpriteNum;
 
+	struct Cloud {
+		std::uint16_t spriteNum; // cloud sprite (0-3)
+		int x;
+		int y;
+	};
+
+	std::vector<Cloud> clouds;
+	int numClouds;
+
 	std::optional<SCRANTIC::SPECIAL_DAY> specialDay;
 
     int8_t animationCycle;
@@ -81,7 +90,8 @@ protected:
     //freed by BMPFile
 	std::shared_ptr<BMPFile> backgroundBMP;
 	std::shared_ptr<BMPFile> holidayBMP;
-    std::shared_ptr<BMPFile> raftBMP;
+	std::shared_ptr<BMPFile> raftBMP;
+	std::shared_ptr<BMPFile> cloudBMP;
 
     std::list<std::pair<std::uint16_t, std::uint16_t> > lastTTMs;
 
@@ -107,7 +117,7 @@ protected:
     void resetPlayer();
 
     void menuRenderer();
-    void renderBackgroundAtPos(std::uint16_t num, int32_t x, int32_t y, bool raft = false);
+    void renderBackgroundAtPos(const std::shared_ptr<BMPFile> & BMPFile, std::uint16_t num, int x, int y);
     void animateBackground();
     void displaySplash();
 	void renderSpecialDay(SPECIAL_DAY specialEvent, int32_t x, int32_t y);

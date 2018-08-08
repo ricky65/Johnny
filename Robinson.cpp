@@ -138,7 +138,14 @@ void SCRANTIC::Robinson::initRenderer(SDL_Renderer *rendererSDL)
     islandTrunk.y = ISLAND_TEMP_Y;
 
 	// pick random raft sprite (0-6)
-	raftSpriteNum = Random::get<std::uint16_t>(0, 6);
+	raftSpriteNum = Random::get<std::uint16_t>(0, 6);	
+	
+	// pick random number of clouds (0-3)
+	numClouds = Random::get<int>(0, 3);
+	// pick random cloud sprites (0-3) and random positions
+	for (int n = 0; n < numClouds; ++n) {
+		clouds.push_back({ Random::get<std::uint16_t>(0, 3), Random::get<int>(0, SCREEN_WIDTH), Random::get<int>(0, 40) });
+	}
 
 	// check for special day
 	specialDay = getSpecialDay();
@@ -157,6 +164,7 @@ void SCRANTIC::Robinson::initRenderer(SDL_Renderer *rendererSDL)
     backgroundBMP = std::static_pointer_cast<BMPFile>(res->getResource("BACKGRND.BMP"));
     raftBMP = std::static_pointer_cast<BMPFile>(res->getResource("MRAFT.BMP"));
     holidayBMP = std::static_pointer_cast<BMPFile>(res->getResource("HOLIDAY.BMP"));
+	cloudBMP = std::static_pointer_cast<BMPFile>(res->getResource("CLOUDS.BMP"));
 
     scrTexture = NULL;
 
@@ -453,8 +461,16 @@ void SCRANTIC::Robinson::resetPlayer()
 	scrTexture = NULL;
 	islandPos = NO_ISLAND;
 
-	// raft sprite (0-6)
+	// pick random raft sprite (0-6)
 	raftSpriteNum = Random::get<std::uint16_t>(0, 6);
+	
+	// pick random number of clouds (0-3)
+	numClouds = Random::get<int>(0, 3);
+	clouds.clear();
+	// pick random cloud sprites (0-3) and random positions
+	for (int n = 0; n < numClouds; ++n) {
+		clouds.push_back({ Random::get<std::uint16_t>(0, 3), Random::get<int>(0, SCREEN_WIDTH), Random::get<int>(0, 40) });
+	}
 
 	// check for special day
 	specialDay = getSpecialDay();
@@ -474,10 +490,10 @@ void SCRANTIC::Robinson::resetPlayer()
     SDL_SetRenderTarget(renderer, rendererTarget);
 }
 
-void SCRANTIC::Robinson::renderBackgroundAtPos(std::uint16_t num, int32_t x, int32_t y, bool raft)
+void SCRANTIC::Robinson::renderBackgroundAtPos(const std::shared_ptr<BMPFile> & BMPFile, std::uint16_t num, int x, int y)
 {
     SDL_Rect src, dest;
-    SDL_Texture *bkg = !raft ? backgroundBMP->getImage(renderer, num, src) : raftBMP->getImage(renderer, num, src);
+    SDL_Texture *bkg = BMPFile->getImage(renderer, num, src);
 
     dest.x = x;
     dest.y = y;
@@ -493,19 +509,17 @@ void SCRANTIC::Robinson::animateBackground()
 
     if (islandLarge)
     {
-        renderBackgroundAtPos((SPRITE_WAVE_L_LEFT + animationCycle/12), WAVE_L_LEFT_X + islandTrunk.x, WAVE_L_LEFT_Y + islandTrunk.y);
-        renderBackgroundAtPos((SPRITE_WAVE_L_MID + ((animationCycle/12 + 1) % 3)), WAVE_L_MID_X + islandTrunk.x, WAVE_L_MID_Y + islandTrunk.y);
-        renderBackgroundAtPos((SPRITE_WAVE_L_RIGHT + ((animationCycle/12 + 2) % 3)), WAVE_L_RIGHT_X + islandTrunk.x, WAVE_L_RIGHT_Y + islandTrunk.y);
-        renderBackgroundAtPos((SPRITE_WAVE_STONE + animationCycle/12), WAVE_STONE_X + islandTrunk.x, WAVE_STONE_Y + islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, (SPRITE_WAVE_L_LEFT + animationCycle/12), WAVE_L_LEFT_X + islandTrunk.x, WAVE_L_LEFT_Y + islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, (SPRITE_WAVE_L_MID + ((animationCycle/12 + 1) % 3)), WAVE_L_MID_X + islandTrunk.x, WAVE_L_MID_Y + islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, (SPRITE_WAVE_L_RIGHT + ((animationCycle/12 + 2) % 3)), WAVE_L_RIGHT_X + islandTrunk.x, WAVE_L_RIGHT_Y + islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, (SPRITE_WAVE_STONE + animationCycle/12), WAVE_STONE_X + islandTrunk.x, WAVE_STONE_Y + islandTrunk.y);
     }
     else
     {
-        renderBackgroundAtPos((SPRITE_WAVE_LEFT + animationCycle/12), WAVE_LEFT_X + islandTrunk.x, WAVE_LEFT_Y + islandTrunk.y);
-        renderBackgroundAtPos((SPRITE_WAVE_MID + ((animationCycle/12 + 1) % 3)), WAVE_MID_X + islandTrunk.x, WAVE_MID_Y + islandTrunk.y);
-        renderBackgroundAtPos((SPRITE_WAVE_RIGHT + ((animationCycle/12 + 2) % 3)), WAVE_RIGHT_X + islandTrunk.x, WAVE_RIGHT_Y + islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, (SPRITE_WAVE_LEFT + animationCycle/12), WAVE_LEFT_X + islandTrunk.x, WAVE_LEFT_Y + islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, (SPRITE_WAVE_MID + ((animationCycle/12 + 1) % 3)), WAVE_MID_X + islandTrunk.x, WAVE_MID_Y + islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, (SPRITE_WAVE_RIGHT + ((animationCycle/12 + 2) % 3)), WAVE_RIGHT_X + islandTrunk.x, WAVE_RIGHT_Y + islandTrunk.y);
     }
-
-    //weather is missing
 
     ++animationCycle;
     if (animationCycle >= 36)
@@ -542,18 +556,23 @@ void SCRANTIC::Robinson::render()
         else
             SDL_RenderCopy(renderer, oceanTexture, &oceanRect, &oceanRect);
 
+		//weather - render up to 3 clouds		
+		for (int n = 0; n < numClouds; ++n) {
+			renderBackgroundAtPos(cloudBMP, clouds[n].spriteNum, clouds[n].x, clouds[n].y);
+		}		
+
         if (islandLarge)
         {
-            renderBackgroundAtPos(SPRITE_L_ISLAND, L_ISLAND_X + islandTrunk.x, L_ISLAND_Y + islandTrunk.y);
-            renderBackgroundAtPos(SPRITE_STONE, STONE_X + islandTrunk.x, STONE_Y + islandTrunk.y);
+            renderBackgroundAtPos(backgroundBMP, SPRITE_L_ISLAND, L_ISLAND_X + islandTrunk.x, L_ISLAND_Y + islandTrunk.y);
+            renderBackgroundAtPos(backgroundBMP, SPRITE_STONE, STONE_X + islandTrunk.x, STONE_Y + islandTrunk.y);
         }
 
-        renderBackgroundAtPos(SPRITE_ISLAND, ISLAND_X + islandTrunk.x, ISLAND_Y + islandTrunk.y);
-        renderBackgroundAtPos(SPRITE_TOP_SHADOW, TOP_SHADOW_X + islandTrunk.x, TOP_SHADOW_Y + islandTrunk.y);
-        renderBackgroundAtPos(SPRITE_TRUNK, islandTrunk.x, islandTrunk.y);
-        renderBackgroundAtPos(SPRITE_TOP, TOP_X + islandTrunk.x, TOP_Y + islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, SPRITE_ISLAND, ISLAND_X + islandTrunk.x, ISLAND_Y + islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, SPRITE_TOP_SHADOW, TOP_SHADOW_X + islandTrunk.x, TOP_SHADOW_Y + islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, SPRITE_TRUNK, islandTrunk.x, islandTrunk.y);
+        renderBackgroundAtPos(backgroundBMP, SPRITE_TOP, TOP_X + islandTrunk.x, TOP_Y + islandTrunk.y);
 
-        renderBackgroundAtPos(raftSpriteNum, RAFT_X + islandTrunk.x, RAFT_Y + islandTrunk.y, true);		
+        renderBackgroundAtPos(raftBMP, raftSpriteNum, RAFT_X + islandTrunk.x, RAFT_Y + islandTrunk.y);		
 
         animateBackground();		
     }
