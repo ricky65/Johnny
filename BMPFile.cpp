@@ -240,11 +240,6 @@ SDL_Texture *SCRANTIC::BMPFile::getOverviewImage(SDL_Renderer *renderer, SDL_Rec
             std::cerr << filename << ": Error creating SDL_Texture" << std::endl;
             return NULL;
         }
-
-        rect.w = overview->w;
-        rect.h = overview->h;
-
-        return ovTexture;
     }
 
     rect.w = overview->w;
