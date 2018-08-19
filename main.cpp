@@ -71,15 +71,15 @@ bool init()
     }
 
     //Create window
-    g_Mainwindow = SDL_CreateWindow(
-                "Johnny's World",
-                SDL_WINDOWPOS_UNDEFINED,
-                SDL_WINDOWPOS_UNDEFINED,
-                SCREEN_WIDTH,
-                SCREEN_HEIGHT,
-				SDL_WINDOW_SHOWN);// SDL_WINDOW_FULLSCREEN_DESKTOP
+	g_Mainwindow = SDL_CreateWindow(
+		"Johnny's World",
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		SCREEN_WIDTH, 
+		SCREEN_HEIGHT,
+		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE /* SDL_WINDOW_FULLSCREEN_DESKTOP */); 
 
-    if (g_Mainwindow == NULL)
+    if (!g_Mainwindow)
     {
         std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         cleanup();
@@ -87,17 +87,26 @@ bool init()
     }
 
     g_Renderer = SDL_CreateRenderer(g_Mainwindow, -1, 0);
-    if (g_Renderer == NULL)
+    if (!g_Renderer)
     {
         std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         cleanup();
         return false;
     }
 
-    // Set size of renderer to the same as window
-    SDL_RenderSetLogicalSize(g_Renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+	// Hide cursor
+	SDL_ShowCursor(SDL_DISABLE);
 
-    return true;
+	// Use linear filtering
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+
+	// Set size of renderer
+	SDL_RenderSetLogicalSize(g_Renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+	// Preserve screen ratio
+	SDL_RenderSetIntegerScale(g_Renderer, SDL_TRUE);
+
+	return true;
 }
 
 int main(int argc, char *args[])

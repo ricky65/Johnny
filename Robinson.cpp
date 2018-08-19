@@ -120,6 +120,8 @@ void SCRANTIC::Robinson::displaySplash()
     SDL_Texture *splash = std::static_pointer_cast<SCRFile>(res->getResource("INTRO.SCR"))->getImage(renderer, splashRect);
     SDL_RenderCopy(renderer, splash, &splashRect, &splashRect);
     SDL_RenderPresent(renderer);
+
+	SDL_Delay(3000); // pause on splash for 3 seconds
 }
 
 void SCRANTIC::Robinson::initRenderer(SDL_Renderer *rendererSDL)
@@ -153,8 +155,8 @@ void SCRANTIC::Robinson::initRenderer(SDL_Renderer *rendererSDL)
     // random pick ocean (0-2)
     oceanRect.x = 0;
     oceanRect.y = 0;
-    std::uint8_t random = Random::get<std::uint8_t>(0, 2);
-    std::string ocean = "OCEAN0" + std::to_string(random) + ".SCR";
+    std::uint8_t randomOcean = Random::get<std::uint8_t>(0, 2);
+    std::string ocean = "OCEAN0" + std::to_string(randomOcean) + ".SCR";
 
     // load SCR files
     oceanTexture = std::static_pointer_cast<SCRFile>(res->getResource(ocean))->getImage(renderer, oceanRect);
@@ -192,9 +194,7 @@ void SCRANTIC::Robinson::initMenu(TTF_Font *font)
     //generate menu textures
 	std::shared_ptr<ADSFile> ads;
 
-    std::string name, adsstring;
-
-    std::uint16_t id;
+    std::string adsstring;
 
     SDL_Rect rect;
     SDL_Surface *tmpSurface;
@@ -229,32 +229,28 @@ void SCRANTIC::Robinson::initMenu(TTF_Font *font)
         TTF_SizeText(font, adsstring.c_str(), &rect.w, &rect.h);
         tmpSurface = TTF_RenderText_Blended(font, adsstring.c_str(), c1);
 
-        if (tmpSurface == NULL)
-            std::cerr << "ERROR: Renderer: Could not render text: " << name << std::endl;
-        else
-        {
-            SDL_BlitSurface(tmpSurface, NULL, menu, &rect);
+		if (tmpSurface)
+		{
+			SDL_BlitSurface(tmpSurface, NULL, menu, &rect);
             SDL_FreeSurface(tmpSurface);
+		}
+        else
+        {			
+			std::cerr << "ERROR: Renderer: Could not render text: " << adsstring << '\n';
         }
 
         menuPos.insert(std::make_pair(adsstring, std::map<std::uint16_t, SDL_Rect>()));
 
-
-        for (auto tag : ads->tagList)
+        for (const auto [id, name] : ads->tagList)
         {
-            id = tag.first;
-            name = tag.second;
-
             rect.y = rect.y + rect.h + 10;
 
             TTF_SizeText(font, name.c_str(), &rect.w, &rect.h);
             tmpSurface = TTF_RenderText_Blended(font, name.c_str(), c2);
 
-            if (tmpSurface == NULL)
-                std::cerr << "ERROR: Renderer: Could not render text: " << name << std::endl;
-            else
-            {
-                SDL_BlitSurface(tmpSurface, NULL, menu, &rect);
+			if (tmpSurface)
+			{
+				SDL_BlitSurface(tmpSurface, NULL, menu, &rect);
                 SDL_FreeSurface(tmpSurface);
                 rect.w += 6;
                 rect.x -= 3;
@@ -264,18 +260,23 @@ void SCRANTIC::Robinson::initMenu(TTF_Font *font)
                 rect.x += 3;
                 rect.y += 3;
                 rect.h -= 6;
+			}
+            else
+            {				
+				std::cerr << "ERROR: Renderer: Could not render text: " << name << '\n';
             }
-
         }
 
         tex = SDL_CreateTextureFromSurface(renderer, menu);
 
-        if (tex == NULL)
-            std::cerr << "ERROR: Renderer: Could not convert menu surface to to texture: " << res->ADSFiles.at(i) << std::endl;
-        else
-        {
-            SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
+		if (tex)
+		{
+			SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
             SDL_SetTextureAlphaMod(tex, 200);
+		}
+        else
+        {			
+			std::cerr << "ERROR: Renderer: Could not convert menu surface to to texture: " << res->ADSFiles.at(i) << '\n';
         }
 
         SDL_FreeSurface(menu);
@@ -453,8 +454,8 @@ void SCRANTIC::Robinson::resetPlayer()
 
 	islandNight = Random::get<bool>();
 	islandLarge = Random::get<bool>();
-	std::uint8_t random = Random::get<std::uint8_t>(0, 2);
-	std::string ocean = "OCEAN0" + std::to_string(random) + ".SCR";
+	std::uint8_t randomOcean = Random::get<std::uint8_t>(0, 2);
+	std::string ocean = "OCEAN0" + std::to_string(randomOcean) + ".SCR";
 	oceanTexture = std::static_pointer_cast<SCRFile>(res->getResource(ocean))->getImage(renderer, oceanRect);
 
 	movieRunning = false;
